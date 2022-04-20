@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+
+    <!-- <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="/build/css/video-js.min.css">
+    <link rel="stylesheet" href="/build/css/videojs.record.css">
+
+    <!-- <script src="https://unpkg.com/video.js/dist/video.js"></script> -->
+     <!-- <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script> -->
+     <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
+    <script src="/build/video.js"></script>
+    <script src="/build/RecordRTC.js"></script>
+    <script src="/build/adapter-latest.js"></script>
+    <script src="/build/videojs.record.js"></script>
+
+    <!-- <title><%= htmlWebpackPlugin.options.title %></title> -->
+    <title>水上交通管理</title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
