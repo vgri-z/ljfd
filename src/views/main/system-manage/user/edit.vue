@@ -8,7 +8,7 @@
       :close-on-click-modal="false"
       @closed="cancel"
     >
-      <el-form ref="editFormRef" :model="editForm" :rules="rules" label-width="70px">
+      <el-form ref="editFormRef" :model="editForm" :rules="rules" label-width="90px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户名" prop="userName">
@@ -47,6 +47,33 @@
               ></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="所属机构" prop="organizationNames">
+              <el-popover
+                placement="bottom"
+                title="选择机构"
+                :width="250"
+                trigger="click"
+                popper-class="class-pop"
+                ref="popeverRef"
+              >
+                <template #reference>
+                  <el-input v-model="editForm.organizationNames" placeholder="请选择所属机构" />
+                </template>
+                <template #default>
+                  <el-tree
+                    lazy
+                    class="class-tree"
+                    :load="loadNode"
+                    :props="defaultProps"
+                    :expand-on-click-node="false"
+                    ref="departmentTreeRef"
+                    @node-click="handleNodeClick"
+                  />
+                </template>
+              </el-popover>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <template #footer>
@@ -62,6 +89,10 @@
 <script>
 import { addRules } from './config.js'
 import { addUser, editUser } from '../../../../service/main/main'
+import {
+  getDepartmentList,
+  getChildrenDepartment
+} from '../../../../service/main/department/department'
 import { ElMessage } from 'element-plus'
 export default {
   data() {
@@ -69,18 +100,39 @@ export default {
       isEditShow: false,
       editForm: {
         userName: '',
-        password: '', // 123456@vV
+        password: '',
         givenName: '',
-        phoneNumber: null
+        phoneNumber: null,
+        organizationIds: '',
+        organizationNames: ''
       },
       rules: addRules,
       isEdit: true,
       isDisabled: false,
-      userData: null
+      userData: null,
+      defaultProps: {
+        children: 'list',
+        label: 'name'
+      }
     }
   },
   methods: {
+    async _getDepartmentList() {
+      const res = await getDepartmentList()
+      this.treeList = res.data
+      console.log(res)
+    },
+    async loadNode(node, resolve) {
+      const res = await getChildrenDepartment({ ParentId: node.data.id })
+      resolve(res.data)
+    },
+    handleNodeClick(data) {
+      this.editForm.organizationIds = [data.id]
+      this.editForm.organizationNames = data.name
+      console.log(this.$refs.popeverRef)
+    },
     show(data) {
+      this._getDepartmentList()
       if (data) {
         this.userData = data
         const { userName, givenName, phoneNumber, id } = data

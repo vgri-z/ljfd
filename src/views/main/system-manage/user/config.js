@@ -11,22 +11,22 @@ export const addRules = {
       required: true,
       message: '请输入密码',
       trigger: 'blur'
-    },
-    {
-      pattern: /^(?=.*[a-z])/,
-      message: '密码至少包含一个小写字母',
-      trigger: 'blur'
-    },
-    {
-      pattern: /^(?=.*[A-Z])/,
-      message: '密码至少包含一个大写字母',
-      trigger: 'blur'
-    },
-    {
-      pattern: /^(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]/,
-      message: '密码至少包含一个特殊字符',
-      trigger: 'blur'
     }
+    // {
+    //   pattern: /^(?=.*[a-z])/,
+    //   message: '密码至少包含一个小写字母',
+    //   trigger: 'blur'
+    // },
+    // {
+    //   pattern: /^(?=.*[A-Z])/,
+    //   message: '密码至少包含一个大写字母',
+    //   trigger: 'blur'
+    // },
+    // {
+    //   pattern: /^(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]/,
+    //   message: '密码至少包含一个特殊字符',
+    //   trigger: 'blur'
+    // }
     // {
     //   pattern: /^\d{6,16}$/,
     //   message: '密码至少需要6位',
@@ -54,6 +54,13 @@ export const addRules = {
       pattern: /^(0|86|17951)?(1[3-9])[0-9]{9}$/,
       message: '请输入正确的手机号',
       trigger: 'blur'
+    }
+  ],
+  organizationNames: [
+    {
+      required: true,
+      message: '请选择机构',
+      trigger: 'change'
     }
   ]
 }

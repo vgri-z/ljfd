@@ -3,7 +3,7 @@
     <!-- logo -->
     <div class="logo">
       <img class="img" src="~@/assets/img/ship.png" alt="" />
-      <span v-if="isCollapse" class="title">船检系统</span>
+      <span v-if="isCollapse" class="title">垃圾发电管理系统</span>
     </div>
     <!-- 菜单 -->
     <el-menu

@@ -66,5 +66,19 @@ export const userMenus = [
         url: '/main/system-manage/department'
       }
     ]
+  },
+  {
+    displayName: '内容管理',
+    hasUrl: false,
+    icon: 'Reading',
+    id: '953ae96f-286e-494a-92bd-3a015e608e43',
+    isEnabled: true,
+    isLeaf: true,
+    name: 'content',
+    order: 1009,
+    parentId: null,
+    permission: null,
+    url: '/main/content-manage/content',
+    children: []
   }
 ]
