@@ -1,8 +1,9 @@
 import router from '@/router'
-import { accountLoginRequest, getCurrentUserInfo, getUserMenus } from '@/service/login/login'
+import { accountLoginRequest, getCurrentUserInfo } from '@/service/login/login'
 import { getApplicantTypes } from '../../service/main/main'
 import localCache from '@/utils/cache'
 import { mapMenusToRoutes } from '../../utils/map-menu'
+import { userMenus } from '../../views/main/config/menuList'
 // import { ElMessage } from 'element-plus'
 
 const loginModule = {
@@ -62,9 +63,9 @@ const loginModule = {
       localCache.cacheSet('userInfo', userInfo)
 
       // 获取用户菜单
-      const userMenusRes = await getUserMenus('Main')
-      // console.log(userMenusRes, 'userMenus')
-      const userMenus = userMenusRes.data.items
+      // const userMenusRes = await getUserMenus('Main')
+      // // console.log(userMenusRes, 'userMenus')
+      // const userMenus = userMenusRes.data.items
       commit('changeUserMenus', userMenus)
       localCache.cacheSet('userMenus', userMenus)
       if (userMenus.length) {

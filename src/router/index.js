@@ -3,7 +3,7 @@ import localCache from '../utils/cache'
 // import { firstMenu } from '../utils/map-menu'
 const login = () => import(/* webpackChunkName: "login" */ '../views/login/login.vue')
 const main = () => import(/* webpackChunkName: 'main' */ '../views/main/main.vue')
-const notFound = import(/* webpackChunkName: 'notFound' */ '../views/not-found/not-found.vue')
+const notFound = () => import(/* webpackChunkName: 'notFound' */ '../views/not-found/not-found.vue')
 
 const routes = [
   {
@@ -19,69 +19,7 @@ const routes = [
     path: '/main',
     name: 'main',
     component: main,
-    children: [
-      // 船舶修改/详情
-      {
-        path: 'ship-manage/shipManage/detail/:id',
-        name: 'shipManageDetail',
-        component: () => import('../views/main/ship-manage/shipManage/detail.vue')
-      },
-      {
-        path: 'ship-manage/shipManage/edit/:id',
-        name: 'shipManageEdit',
-        component: () => import('../views/main/ship-manage/shipManage/edit.vue')
-      },
-      // 船员修改/详情
-      {
-        path: 'sailor-manage/certificateManage/detail/:id',
-        name: 'sailorManageDetail',
-        component: () => import('../views/main/sailor-manage/certificateManage/detail.vue')
-      },
-      {
-        path: 'sailor-manage/certificateManage/edit/:id',
-        name: 'sailorManageEdit',
-        component: () => import('../views/main/sailor-manage/certificateManage/edit.vue')
-      },
-      // 运营修改/详情
-      {
-        path: 'operation-manage/operateManage/detail/:id',
-        name: 'operationManageDetail',
-        component: () => import('../views/main/operation-manage/operateManage/detail.vue')
-      },
-      {
-        path: 'operation-manage/operateManage/edit/:id',
-        name: 'operationManageEdit',
-        component: () => import('../views/main/operation-manage/operateManage/edit.vue')
-      },
-      // 船检修改/详情
-      {
-        path: 'inspect-manage/inspectManage/detail/:id',
-        name: 'inspectManageDetail',
-        component: () => import('../views/main/inspect-manage/inspectManage/detail.vue')
-      },
-      {
-        path: 'inspect-manage/inspectManage/edit/:id',
-        name: 'inspectManageEdit',
-        component: () => import('../views/main/inspect-manage/inspectManage/edit.vue')
-      },
-      // 港口企业修改/详情
-      {
-        path: 'port-manage/consultManage/detail/:id',
-        name: 'portManageDetail',
-        component: () => import('../views/main/port-manage/consultManage/detail.vue')
-      },
-      {
-        path: 'port-manage/consultManage/edit/:id',
-        name: 'portManageEdit',
-        component: () => import('../views/main/port-manage/consultManage/edit.vue')
-      },
-      // 系统日志
-      {
-        path: 'system-manage/systemLog/detail/:id',
-        name: 'systemLogDetail',
-        component: () => import('../views/main/system-manage/systemLog/detail.vue')
-      }
-    ]
+    children: []
   },
   {
     path: '/:pathMatch(.*)*',
