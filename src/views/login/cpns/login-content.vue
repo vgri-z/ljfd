@@ -1,7 +1,7 @@
 <template>
   <div class="login-content">
     <div class="form-title">
-      <h3><span>芜湖水上交通人像采集平台</span></h3>
+      <h3><span>垃圾发电危险源管理</span></h3>
     </div>
     <div class="login-form">
       <div class="content-title">用户登录</div>
