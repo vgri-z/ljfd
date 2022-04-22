@@ -4,24 +4,23 @@
       v-model="isEditShow"
       center
       title="添加"
-      width="30%"
+      width="25%"
       :close-on-click-modal="false"
       @closed="cancel"
     >
       <el-form ref="editFormRef" :model="editForm" :rules="rules" label-width="90px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="角色名称" prop="name">
               <el-input
                 v-model="editForm.name"
-                :disabled="isDisabled"
                 maxlength="256"
                 placeholder="请输入角色名称"
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="描述" prop="description">
+          <el-col :span="24">
+            <el-form-item label="描述">
               <el-input
                 v-model="editForm.description"
                 maxlength="50"
@@ -42,78 +41,56 @@
 </template>
 
 <script>
-import { addRules } from './config.js'
-import { addUser, editUser } from '../../../../service/main/main'
-// import {
-//   getDepartmentList,
-//   getChildrenDepartment
-// } from '../../../../service/main/department/department'
+import { editUserRules } from './config/role.config'
+import { addRole, editRole } from '../../../../service/main/role/role'
 import { ElMessage } from 'element-plus'
 export default {
   data() {
     return {
       isEditShow: false,
       editForm: {
-        userName: '',
-        password: '',
-        givenName: '',
-        phoneNumber: null,
-        organizationIds: '',
-        organizationNames: ''
+        name: '',
+        description: ''
       },
-      rules: addRules,
-      isEdit: true,
-      isDisabled: false,
-      userData: null,
-      defaultProps: {
-        children: 'list',
-        label: 'name'
-      }
+      rules: editUserRules,
+      isEdit: true
     }
   },
+  emits: ['updateRole'],
   methods: {
     show(data) {
-      this._getDepartmentList()
+      console.log(data)
       if (data) {
-        this.userData = data
-        const { userName, givenName, phoneNumber, id } = data
-        this.editForm = Object.assign({}, { userName, givenName, phoneNumber, userId: id })
-        this.isEdit = false
-        this.isDisabled = true
-      } else {
-        this.isEdit = true
-        this.isDisabled = false
-        // console.log('新建用户')
+        this.editForm = Object.assign({}, this.editForm, data)
+        this.editForm.roleId = this.editForm.id
       }
       this.isEditShow = true
     },
     edit() {
       this.$refs.editFormRef.validate(async (valid) => {
         if (valid) {
-          // console.log(this.editForm)
-          // if (!this.editForm.phoneNumber) this.editForm.phoneNumber = null
           let res = null
-          if (this.editForm.userId) {
-            res = await editUser(this.editForm)
-            if (res.success) {
+          if (this.editForm.id) {
+            res = await editRole(this.editForm)
+            if (res.code === 0) {
               // 添加成功
               ElMessage({
                 message: '操作成功',
                 type: 'success'
               })
               this.isEditShow = false
-              this.$emit('addUser')
+              this.$emit('updateRole')
             }
           } else {
-            res = await addUser(this.editForm)
-            if (res.success) {
+            res = await addRole(this.editForm)
+            if (res.code === 0) {
               // 添加成功
               ElMessage({
                 message: '操作成功',
                 type: 'success'
               })
               this.isEditShow = false
-              this.$emit('addUser')
+              this.$emit('updateRole')
             }
           }
         }
@@ -121,10 +98,8 @@ export default {
     },
     cancel() {
       this.editForm = {
-        userName: '',
-        password: '', // 123456@vV
-        givenName: '',
-        phoneNumber: null
+        name: '',
+        description: ''
       }
       this.isEditShow = false
     }

@@ -43,12 +43,19 @@
         </el-pagination>
       </div>
     </div>
+
+    <!-- 新增/编辑 -->
+    <edit ref="editRef" @updateRole="updateRole" />
   </div>
 </template>
 
 <script>
 import { getRoleList } from '../../../../service/main/role/role'
+import Edit from './edit.vue'
 export default {
+  components: {
+    Edit
+  },
   data() {
     return {
       currentPage: 1,
@@ -76,8 +83,17 @@ export default {
       const res = await getRoleList(this.searchOption)
       console.log(res)
       this.roleList = res.data.list
+      this.total = res.data.total
     },
-    add() {},
+    add() {
+      this.$refs.editRef.show()
+    },
+    edit(data) {
+      this.$refs.editRef.show(data)
+    },
+    updateRole() {
+      this.getRoleList()
+    },
     handleSizeChange(event) {
       this.searchOption.Size = event
       this.getRoleList()

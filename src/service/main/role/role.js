@@ -15,18 +15,18 @@ export function getRoleList(params) {
 }
 
 // 添加角色
-export function addRole(params) {
+export function addRole(data) {
   return vgriRequest.post({
     url: urlObj.editRoleUrl,
-    params
+    data
   })
 }
 
 // 修改角色
-export function editRole(params) {
+export function editRole(data) {
   return vgriRequest.put({
     url: urlObj.editRoleUrl,
-    params
+    data
   })
 }
 
