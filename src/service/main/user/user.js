@@ -1,8 +1,8 @@
 import { vgriRequest } from '../index'
 
 const urlObj = {
-  userListUrl: '/api/user/paged-list',
-  addUrl: '/api/user'
+  userListUrl: '/user/paged-list',
+  addUrl: '/user'
 }
 
 // 获取用户列表

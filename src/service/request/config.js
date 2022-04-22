@@ -7,10 +7,10 @@ if (process.env.NODE_ENV === 'development') {
   BASE_URL = '/api'
 } else if (process.env.NODE_ENV === 'production') {
   // 生产环境
-  BASE_URL = ''
+  BASE_URL = '/api'
 } else {
   // 测试环境
-  BASE_URL = ''
+  BASE_URL = '/api'
 }
 
 export { BASE_URL, TIME_OUT }

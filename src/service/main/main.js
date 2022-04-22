@@ -1,43 +1,16 @@
 import { vgriRequest } from '../index'
 
 const urlObj = {
-  userListUrl: '/api/user/paged-list',
-  addUrl: '/api/user',
-  editPasswordUrl: '/api/user/current/password',
-  resetPasswordUrl: '/api/user/password/default',
-  removeUrl: '/api/user/',
-  rightsUrl: '/api/permission/list',
-  currentRightsUrl: '/api/user/current/permissions',
-  applicantTypesUrl: '/api/dict-catalog/dict/list',
-  lockUrl: '/api/user/lockout',
-  unlockUrl: '/api/user/unlock',
-  // 船舶登记
-  registerListUrl: '/api/shipregistration/paged-list',
-  shipRegisterUrl: '/api/shipregistration',
-  shipRegisterUpdateUrl: '/api/shipregistration',
-  deleteShipUrl: '/api/shipregistration/',
-  // 船员登记
-  sailorListUrl: '/api/sailorregistration/paged-list',
-  sailorRegisterUrl: '/api/sailorregistration',
-  sailorRegisterUpdateUrl: '/api/sailorregistration',
-  deleteSailorUrl: '/api/sailorregistration/',
-  // 运营登记
-  operationListUrl: '/api/shipoperationregistration/paged-list',
-  operationRegisterUrl: '/api/shipoperationregistration',
-  operationRegisterUpdateUrl: '/api/shipoperationregistration',
-  deleteOperationUrl: '/api/shipoperationregistration/',
-  // 船检登记
-  inspectListUrl: '/api/shipinspectionregistration/paged-list',
-  inspectRegisterUrl: '/api/shipinspectionregistration',
-  inspectRegisterUpdateUrl: '/api/shipinspectionregistration',
-  deleteInspectUrl: '/api/shipinspectionregistration/',
-  // 港口企业
-  consultListUrl: '/api/companyconsultingregistration/paged-list',
-  consultRegisterUrl: '/api/companyconsultingregistration',
-  consultRegisterUpdateUrl: '/api/companyconsultingregistration',
-  deleteConsultUrl: '/api/companyconsultingregistration/',
-  // 系统日志
-  logListUrl: '/api/audit-log/paged-list'
+  userListUrl: '/user/paged-list',
+  addUrl: '/user',
+  editPasswordUrl: '/user/current/password',
+  resetPasswordUrl: '/user/password/default',
+  removeUrl: '/user/',
+  rightsUrl: '/permission/list',
+  currentRightsUrl: '/user/current/permissions',
+  applicantTypesUrl: '/dict-catalog/dict/list',
+  lockUrl: '/user/lockout',
+  unlockUrl: '/user/unlock'
 }
 
 // 获取用户列表

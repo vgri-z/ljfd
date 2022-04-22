@@ -67,7 +67,9 @@ export default {
     }
   },
   methods: {
-    search() {},
+    search() {
+      this.getContentList()
+    },
     reset() {},
     getContentList() {},
     add() {},

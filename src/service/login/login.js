@@ -2,10 +2,10 @@ import { vgriRequest } from '../index'
 
 // 单独储存某个模块所有请求的url
 const urlObj = {
-  loginUrl: '/api/authenticate',
-  refreshUrl: '/api/authenticate/refresh-token',
-  userUrl: '/api/user/current',
-  userMenuUrl: '/api/menu/'
+  loginUrl: '/authenticate',
+  refreshUrl: '/authenticate/refresh-token',
+  userUrl: '/user/current',
+  userMenuUrl: '/menu/'
 }
 
 // 登录请求

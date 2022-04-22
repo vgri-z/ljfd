@@ -1,9 +1,9 @@
 import { vgriRequest } from '../../index'
 
 const urlObj = {
-  roleListUrl: '/api/role/paged-list',
-  editRoleUrl: '/api/role',
-  deleteRoleUrl: '/api/role/'
+  roleListUrl: '/role/paged-list',
+  editRoleUrl: '/role',
+  deleteRoleUrl: '/role/'
 }
 
 // 获取角色列表

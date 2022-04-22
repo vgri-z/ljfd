@@ -1,37 +1,21 @@
-import { vgriRequest } from '../index'
+import { vgriRequest } from '../../index'
 
 const urlObj = {
-  userListUrl: '/api/user/paged-list',
-  addUrl: '/api/user'
+  contentTreeListUrl: '/danger-zone/children',
+  contentTreeChildrenListUrl: '/danger-zone/tree/list'
 }
 
-// 获取用户列表
-export function getUserList(params) {
+// 获取内容管理树列表
+export function getContentTreeList() {
   return vgriRequest.get({
-    url: urlObj.userListUrl,
+    url: urlObj.contentTreeListUrl
+  })
+}
+
+// 获取内容管理树子级列表
+export function getContentTreeChildren(params) {
+  return vgriRequest.get({
+    url: urlObj.contentTreeChildrenListUrl,
     params
-  })
-}
-
-// 添加用户
-export function addUser(data) {
-  return vgriRequest.post({
-    url: urlObj.addUrl,
-    data
-  })
-}
-
-// 编辑用户
-export function editUser(data) {
-  return vgriRequest.put({
-    url: urlObj.addUrl,
-    data
-  })
-}
-
-// 删除用户
-export function removeUser(userId) {
-  return vgriRequest.delete({
-    url: urlObj.removeUrl + userId
   })
 }

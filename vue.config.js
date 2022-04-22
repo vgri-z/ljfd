@@ -6,7 +6,7 @@ module.exports = {
   devServer: {
     proxy: {
       '^/api': {
-        target: 'http://114.55.1.241:8090/',
+        target: 'http://114.55.1.241:8090/api/',
         pathRewrite: {
           '^/api': ''
         },

@@ -1,10 +1,10 @@
 import { vgriRequest } from '../../index'
 
 const urlObj = {
-  departmentListUrl: '/api/organization/list',
-  addDepartmentUrl: '/api/organization',
-  deleteDepartmentUrl: '/api/organization/',
-  departmentChildrenUrl: '/api/organization/children'
+  departmentListUrl: '/organization/list',
+  addDepartmentUrl: '/organization',
+  deleteDepartmentUrl: '/organization/',
+  departmentChildrenUrl: '/organization/children'
 }
 
 // 获取部门列表列表
