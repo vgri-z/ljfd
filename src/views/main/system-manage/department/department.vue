@@ -38,5 +38,10 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
+
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background: #fff;
 }
 </style>

@@ -24,7 +24,7 @@
     </div>
     <div class="table">
       <div class="add">
-        <el-button type="primary" size="medium" @click="add">添加用户</el-button>
+        <el-button type="primary" @click="add">添加内容</el-button>
       </div>
       <el-table :data="contentList" border style="width: 100%">
         <el-table-column prop="userName" label="危险源及作业"></el-table-column>

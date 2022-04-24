@@ -95,16 +95,16 @@ export default {
 .left {
   width: 300px;
   height: 100%;
-  border-right: 1px solid #ced0d3;
+  border-right: 1px solid #e2e5e9;
   padding-right: 20px;
   box-sizing: border-box;
 
-  :deep(.el-tree) {
-    height: calc(100% - 60px);
-    padding: 10px;
-    border-radius: 5px;
-    overflow: auto;
-  }
+  // :deep(.el-tree) {
+  //   height: calc(100% - 60px);
+  //   padding: 10px;
+  //   border-radius: 5px;
+  //   overflow: auto;
+  // }
 
   .search {
     margin-bottom: 10px;

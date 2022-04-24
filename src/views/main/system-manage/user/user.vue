@@ -22,7 +22,6 @@
         <el-button
           v-if="rights.includes('Create') || rights.includes('Superuser')"
           type="primary"
-          size="medium"
           @click="add"
           >添加用户</el-button
         >
