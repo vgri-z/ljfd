@@ -97,7 +97,7 @@ export default {
                 type: 'success'
               })
               this.isEditShow = false
-              this.$emit('updateEdit')
+              this.$emit('updateEdit', res.data)
             }
           }
         }

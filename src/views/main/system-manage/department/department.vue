@@ -1,20 +1,20 @@
 <template>
   <div class="department">
-    <left :treeList="treeList" @updateDepartment="updateDepartment" />
-    <right />
+    <left @updateNode="updateNode" />
+    <right :departmentInfo="departmentInfo" />
   </div>
 </template>
 
 <script>
 import Left from './left.vue'
 import Right from './right.vue'
-import { getDepartmentList } from '../../../../service/main/department/department'
+import { getChildrenDepartment } from '../../../../service/main/department/department'
 export default {
   components: { Left, Right },
   data() {
     return {
       treeList: [],
-      departmentInfo: null
+      departmentInfo: {}
     }
   },
   created() {
@@ -22,12 +22,11 @@ export default {
   },
   methods: {
     async _getDepartmentList() {
-      const res = await getDepartmentList()
-      this.treeList = res.data
-      console.log(res)
+      const res = await getChildrenDepartment({ ParentId: null })
+      this.departmentInfo = res.data[0]
     },
-    updateDepartment() {
-      this._getDepartmentList()
+    updateNode(nodeData) {
+      this.departmentInfo = nodeData
     }
   }
 }

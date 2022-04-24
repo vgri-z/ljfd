@@ -1,15 +1,17 @@
 <template>
   <div class="right">
     <div class="department-info">
-      <el-row v-if="!departmentInfo.clazz">
+      <el-row>
         <el-col :span="8">
-          <div>机构名称：</div>
+          <div>机构名称：{{ departmentInfo.name }}</div>
         </el-col>
+        <!-- <el-col :span="8">
+          <div>
+            上级机构名称：{{ departmentInfo.parentId === null ? '无' : departmentInfo.parent.name }}
+          </div>
+        </el-col> -->
         <el-col :span="8">
-          <div>上级机构名称：</div>
-        </el-col>
-        <el-col :span="8">
-          <div>是否拥有工厂：</div>
+          <div>是否拥有工厂：{{ departmentInfo.hasFactory ? '是' : '否' }}</div>
         </el-col>
       </el-row>
     </div>
@@ -19,9 +21,7 @@
 <script>
 export default {
   data() {
-    return {
-      isDisabled: true
-    }
+    return {}
   },
   props: {
     departmentInfo: {
@@ -31,16 +31,12 @@ export default {
       }
     }
   },
+  methods: {},
   watch: {
-    departmentInfo(val) {
-      if (val.clazz) {
-        this.isDisabled = false
-      } else {
-        this.isDisabled = true
-      }
+    departmentInfo(newVal) {
+      console.log(newVal, 'newVal')
     }
-  },
-  methods: {}
+  }
 }
 </script>
 

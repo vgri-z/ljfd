@@ -13,7 +13,7 @@ const vgriRequest = new VgriRequest({
       // console.log('请求成功拦截')
       // 请求token的拦截 将token添加到请求头里面去
       const status = getTokenStatus()
-      if (status && config.url !== '/api/authenticate/refresh-token') {
+      if (status && config.url !== '/authenticate/refresh-token') {
         await _getRefreshToken()
       }
 
@@ -46,21 +46,21 @@ function getTokenStatus() {
     const nowTime = new Date().getTime()
 
     if (refreshTime <= nowTime) {
+      // token 已过期
       return true
     } else {
+      // token 未过期
       return false
     }
   }
 }
 
 // 刷新token
-// eslint-disable-next-line no-unused-vars
 async function _getRefreshToken() {
   const tokenInfo = localCache.cacheGet('tokenInfo')
   const accessToken = tokenInfo.token
   const refreshToken = tokenInfo.refreshToken
   const res = await getRefreshToken({ accessToken, refreshToken })
-  // console.log(res, 'refresh token ')
   if (!res || res.success === false) {
     router.push('/login')
     return

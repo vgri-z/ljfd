@@ -7,10 +7,18 @@ const urlObj = {
   departmentChildrenUrl: '/organization/children'
 }
 
-// 获取部门列表列表
+// 获取有工厂的部门列表
 export function getDepartmentList(params) {
   return vgriRequest.get({
     url: urlObj.departmentListUrl,
+    params
+  })
+}
+
+// 获取子级部门(传null为获取顶级部门)
+export function getChildrenDepartment(params) {
+  return vgriRequest.get({
+    url: urlObj.departmentChildrenUrl,
     params
   })
 }
@@ -42,13 +50,5 @@ export function deleteDepartment(id) {
 export function getDepartmentDetail(id) {
   return vgriRequest.get({
     url: urlObj.deleteDepartmentUrl + id
-  })
-}
-
-// 获取子级部门
-export function getChildrenDepartment(params) {
-  return vgriRequest.get({
-    url: urlObj.departmentChildrenUrl,
-    params
   })
 }
