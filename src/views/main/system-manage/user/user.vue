@@ -30,7 +30,11 @@
         <el-table-column prop="userName" label="用户名"></el-table-column>
         <el-table-column prop="givenName" label="姓名"></el-table-column>
         <el-table-column prop="phoneNumber" label="手机号"></el-table-column>
-        <el-table-column prop="creationTime" label="添加时间"></el-table-column>
+        <el-table-column label="所属机构">
+          <template v-slot="scope">
+            {{ scope.row.organizationStrs.join(',') }}
+          </template>
+        </el-table-column>
         <el-table-column label="是否禁用">
           <template v-slot="scope">
             <el-switch v-model="scope.row.isLockedOut" @change="lockChange($event, scope.row.id)" />
@@ -142,6 +146,10 @@ export default {
       this.total = res.data.total
       this.userList = res.data.list.map((item) => {
         item.creationTime = moment(item.creationTime).format('YYYY-MM-DD')
+        item.organizationStrs = []
+        item.organizations.forEach((m) => {
+          item.organizationStrs.push(m.name)
+        })
         return item
       })
     },

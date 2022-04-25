@@ -89,10 +89,7 @@
 <script>
 import { addRules } from './config.js'
 import { addUser, editUser } from '../../../../service/main/main'
-import {
-  getDepartmentList,
-  getChildrenDepartment
-} from '../../../../service/main/department/department'
+import { getChildrenDepartment } from '../../../../service/main/department/department'
 import { ElMessage } from 'element-plus'
 export default {
   data() {
@@ -103,7 +100,7 @@ export default {
         password: '',
         givenName: '',
         phoneNumber: null,
-        organizationIds: '',
+        organizationIds: [],
         organizationNames: ''
       },
       rules: addRules,
@@ -117,11 +114,6 @@ export default {
     }
   },
   methods: {
-    async _getDepartmentList() {
-      const res = await getDepartmentList()
-      this.treeList = res.data
-      console.log(res)
-    },
     async loadNode(node, resolve) {
       const res = await getChildrenDepartment({ ParentId: node.data.id })
       resolve(res.data)
@@ -129,14 +121,25 @@ export default {
     handleNodeClick(data) {
       this.editForm.organizationIds = [data.id]
       this.editForm.organizationNames = data.name
-      console.log(this.$refs.popeverRef)
+      this.$refs.popeverRef.tooltipRef.onClose()
     },
     show(data) {
-      this._getDepartmentList()
       if (data) {
+        console.log(this.editForm)
         this.userData = data
-        const { userName, givenName, phoneNumber, id } = data
-        this.editForm = Object.assign({}, { userName, givenName, phoneNumber, userId: id })
+        const { userName, givenName, phoneNumber, id, organizationStrs } = data
+        this.editForm = Object.assign({}, this.editForm, {
+          userName,
+          givenName,
+          phoneNumber,
+          id,
+          organizationStrs
+        })
+        this.editForm.userId = id
+        this.editForm.organizationNames = organizationStrs[0]
+        data.organizations.forEach((item) => {
+          this.editForm.organizationIds.push(item.id)
+        })
         this.isEdit = false
         this.isDisabled = true
       } else {
@@ -183,7 +186,9 @@ export default {
         userName: '',
         password: '', // 123456@vV
         givenName: '',
-        phoneNumber: null
+        phoneNumber: null,
+        organizationIds: [],
+        organizationNames: ''
       }
       this.isEditShow = false
     }
