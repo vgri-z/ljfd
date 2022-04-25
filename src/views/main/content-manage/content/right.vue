@@ -1,55 +1,92 @@
 <template>
   <div class="right">
     <div class="add">
-      <el-button type="primary" @click="edit">编辑</el-button>
-      <el-button type="primary" @click="fileEdit">附件管理</el-button>
+      <el-button type="primary" @click="add">添加危险源</el-button>
     </div>
     <div class="danger-info">
-      <el-row>
-        <el-col :span="8">
-          <div>作业活动/设备设施：</div>
-        </el-col>
-        <el-col :span="8">
-          <div>危险源或潜在事件：</div>
-        </el-col>
-        <el-col :span="8">
-          <div>视频：</div>
-        </el-col>
-        <el-col :span="8">
-          <div>案例：</div>
-        </el-col>
-      </el-row>
+      <el-table :data="dangerList" border style="width: 100%">
+        <el-table-column prop="sort" label="序号"></el-table-column>
+        <el-table-column prop="name" label="危险源或潜在事件"></el-table-column>
+        <el-table-column label="视频">
+          <template #default="scope">
+            {{ scope.row.videos.length }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="phoneNumber" label="案例">
+          <template #default="scope">
+            {{ scope.row.caseFiles.length }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="fileEdit">附件管理</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
 
     <!-- 编辑 -->
-    <edit ref="editRef" />
+    <edit ref="editRef" @updateGlobalDanger="updateGlobalDanger" />
   </div>
 </template>
 
 <script>
 import Edit from './edit.vue'
+import { emitter1 } from '../../../../utils/eventbus'
+import { getGlobalDangerList } from '../../../../service/main/content/content'
 export default {
   components: { Edit },
   data() {
-    return {}
-  },
-  props: {
-    dangerInfo: {
-      type: Object,
-      default() {
-        return {}
-      }
+    return {
+      dangerList: null,
+      searchOptions: {
+        DangerZoneId: '',
+        Index: 1,
+        Size: 10
+      },
+      total: 0,
+      dangerNode: null
     }
   },
-  methods: {
-    edit() {
-      this.$refs.editRef.show()
-    },
-    fileEdit() {}
+  created() {
+    emitter1.on('nodeClick', (node) => {
+      this.dangerNode = node
+      this.searchOptions.DangerZoneId = node.id
+      this.getGlobalDangerList()
+    })
   },
-  watch: {
-    dangerInfo(newVal) {
-      console.log(newVal, 'newVal')
+  methods: {
+    async getGlobalDangerList() {
+      const res = await getGlobalDangerList(this.searchOptions)
+      if (res.data) {
+        res.data.list.forEach((item, index) => {
+          item.sort = index + 1
+          item.videos = []
+          item.caseFiles = []
+          item.files.forEach((file) => {
+            if (file.mime.indexOf('video/') !== -1) {
+              item.videos.push(file)
+            } else {
+              item.caseFiles.push(file)
+            }
+          })
+        })
+        this.dangerList = res.data.list
+        this.total = res.data.total
+        console.log(this.dangerList)
+      }
+    },
+    add() {
+      this.$refs.editRef.show({ isAdd: true, data: this.dangerNode })
+    },
+    edit(data) {
+      this.$refs.editRef.show({ isAdd: false, data })
+    },
+    // 附件管理
+    fileEdit() {},
+    updateGlobalDanger() {
+      this.getGlobalDangerList()
     }
   }
 }

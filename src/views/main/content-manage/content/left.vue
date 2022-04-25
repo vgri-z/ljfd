@@ -3,6 +3,7 @@
     <el-tree
       :data="treeList"
       class="content-tree"
+      default-expand-all
       node-key="id"
       :props="defaultProps"
       :expand-on-click-node="false"
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+import { emitter1 } from '../../../../utils/eventbus'
 export default {
   data() {
     return {
@@ -29,12 +31,10 @@ export default {
       default: () => []
     }
   },
-  emits: [],
-  watch: {},
   methods: {
     handleNodeClick(node) {
       this.selectedNode = node
-      console.log(this.selectedNode)
+      emitter1.emit('nodeClick', node)
     }
   }
 }
@@ -42,7 +42,7 @@ export default {
 
 <style lang="less" scoped>
 .left {
-  width: 300px;
+  width: 250px;
   height: 100%;
   border-right: 1px solid #e2e5e9;
   padding-right: 20px;

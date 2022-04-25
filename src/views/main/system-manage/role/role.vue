@@ -19,19 +19,48 @@
     </div>
     <div class="table">
       <div class="add">
-        <el-button type="primary" @click="add">添加</el-button>
+        <el-button
+          v-if="rights.includes('Create') || rights.includes('Superuser')"
+          type="primary"
+          @click="add"
+          >添加</el-button
+        >
       </div>
       <el-table :data="roleList" border style="width: 100%">
         <el-table-column prop="name" label="角色名称"></el-table-column>
         <el-table-column prop="description" label="备注"></el-table-column>
         <el-table-column label="操作">
           <template v-slot="scope">
-            <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
+            <el-button
+              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              :disabled="scope.row.isStatic"
+              type="text"
+              size="small"
+              @click="edit(scope.row)"
+            >
+              编辑
+            </el-button>
             <el-popconfirm title="是否确认删除该角色？" @confirm="remove(scope.row.id)">
               <template #reference>
-                <el-button type="text" style="color: #f56c6c" size="small">删除</el-button>
+                <el-button
+                  v-if="rights.includes('Delete') || rights.includes('Superuser')"
+                  :disabled="scope.row.isStatic"
+                  type="text"
+                  style="color: #f56c6c"
+                  size="small"
+                >
+                  删除
+                </el-button>
               </template>
             </el-popconfirm>
+            <el-button
+              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              type="text"
+              size="small"
+              @click="setRoleRights(scope.row.id)"
+            >
+              角色权限
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -51,16 +80,22 @@
 
     <!-- 新增/编辑 -->
     <edit ref="editRef" @updateRole="updateRole" />
+
+    <!-- 角色权限设置 -->
+    <rights ref="rightsRef" />
   </div>
 </template>
 
 <script>
 import { getRoleList, deleteRole } from '../../../../service/main/role/role'
 import Edit from './edit.vue'
+import Rights from './rights.vue'
+import { hasRights } from '../../../../utils/pageRights'
 import { ElMessage } from 'element-plus'
 export default {
   components: {
-    Edit
+    Edit,
+    Rights
   },
   data() {
     return {
@@ -71,11 +106,16 @@ export default {
         Size: 10,
         Filter: ''
       },
+      rights: [],
       roleList: null
     }
   },
   created() {
     this.getRoleList()
+    hasRights().then((res) => {
+      // console.log(res)
+      this.rights = res
+    })
   },
   methods: {
     search() {
@@ -106,6 +146,10 @@ export default {
     },
     edit(data) {
       this.$refs.editRef.show(data)
+    },
+    // 设置用户权限
+    setRoleRights(id) {
+      this.$refs.rightsRef.show(id)
     },
     updateRole() {
       this.getRoleList()

@@ -126,8 +126,8 @@ export default {
   created() {
     this._getUserList()
     hasRights().then((res) => {
+      // console.log(res)
       this.rights = res
-      // console.log(this.rights)
     })
   },
   methods: {

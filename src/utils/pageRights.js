@@ -6,22 +6,22 @@ import localCache from './cache'
 
 export async function hasRights() {
   // 匹配菜单
-  const activeMenuId = localCache.cacheGet('activeMenu')
-  const userMenus = localCache.cacheGet('userMenus')
+  const activeMenuId = localCache.cacheGet('activeMenu') // 当前菜单的id
+  const userMenus = localCache.cacheGet('userMenus') // 用户菜单
   patchMenu(userMenus, activeMenuId)
 
   // 请求权限
-  const userId = localCache.cacheGet('userInfo').id
-  const rightsRes = await getCurrentUserRights(userId)
+  const userId = localCache.cacheGet('userInfo').id // 当前用户的id
+  const rightsRes = await getCurrentUserRights(userId) // 获取当前用户的权限
   // console.log(rightsRes, 'rightRes')
 
-  const activeMenu = localCache.cacheGet('rightMenu')
+  const activeMenu = localCache.cacheGet('rightMenu') // 取出当前的权限菜单
 
   const rightsArr = []
   if (rightsRes.data) {
     if (rightsRes.data.includes('Superuser')) {
       // 超管
-      rightsArr.push(rightsRes.data[0])
+      rightsArr.push('Superuser')
     } else {
       // 普通用户
       rightsRes.data.forEach((item) => {
@@ -32,6 +32,7 @@ export async function hasRights() {
       })
     }
   }
+  // console.log(rightsArr, 'rightsArr')
   return rightsArr
 }
 
@@ -40,6 +41,7 @@ function patchMenu(menus, activeMenuId) {
   menus.filter((item) => {
     if (item.children.length === 0) {
       if (item.id === activeMenuId) {
+        // 保存当前活跃的需要进行权限分配的菜单
         localCache.cacheSet('rightMenu', item)
       }
     } else {

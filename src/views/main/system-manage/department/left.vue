@@ -1,9 +1,27 @@
 <template>
   <div class="left">
     <div class="search">
-      <el-button size="small" type="primary" @click="add">添加</el-button>
-      <el-button size="small" type="primary" @click="edit">修改</el-button>
-      <el-button size="small" type="danger" @click="remove">删除</el-button>
+      <el-button
+        v-if="rights.includes('Create') || rights.includes('Superuser')"
+        size="small"
+        type="primary"
+        @click="add"
+        >添加</el-button
+      >
+      <el-button
+        v-if="rights.includes('Update') || rights.includes('Superuser')"
+        size="small"
+        type="primary"
+        @click="edit"
+        >修改</el-button
+      >
+      <el-button
+        v-if="rights.includes('Delete') || rights.includes('Superuser')"
+        size="small"
+        type="danger"
+        @click="remove"
+        >删除</el-button
+      >
     </div>
 
     <el-tree
@@ -28,6 +46,7 @@ import {
   getChildrenDepartment,
   deleteDepartment
 } from '../../../../service/main/department/department'
+import { hasRights } from '../../../../utils/pageRights'
 import { ElMessage } from 'element-plus'
 export default {
   components: { Edit },
@@ -37,7 +56,8 @@ export default {
         children: 'list',
         label: 'name'
       },
-      selectedNode: null
+      selectedNode: null,
+      rights: []
     }
   },
   props: {
@@ -45,6 +65,12 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  created() {
+    hasRights().then((res) => {
+      // console.log(res)
+      this.rights = res
+    })
   },
   emits: ['updateDepartment', 'updateNode'],
   watch: {},

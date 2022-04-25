@@ -36,3 +36,18 @@ export function deleteRole(id) {
     url: urlObj.deleteRoleUrl + id
   })
 }
+
+// 设置角色权限
+export function setRights(id, data) {
+  return vgriRequest.put({
+    url: '/role/' + id + '/permission',
+    data
+  })
+}
+
+// 获取某个用户所拥有的的权限(用于设置权限时的回显)
+export function getRoleRights(id) {
+  return vgriRequest.get({
+    url: '/role/' + id + '/permission/list'
+  })
+}
