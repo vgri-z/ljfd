@@ -3,7 +3,8 @@ import { vgriRequest } from '../../index'
 const urlObj = {
   roleListUrl: '/role/paged-list',
   editRoleUrl: '/role',
-  deleteRoleUrl: '/role/'
+  deleteRoleUrl: '/role/',
+  currentUserRolesUrl: '/user/current/roles'
 }
 
 // 获取角色列表
@@ -49,5 +50,27 @@ export function setRights(id, data) {
 export function getRoleRights(id) {
   return vgriRequest.get({
     url: '/role/' + id + '/permission/list'
+  })
+}
+
+// 为用户设置角色
+export function setRoles(data) {
+  return vgriRequest.put({
+    url: '/user/roles',
+    data
+  })
+}
+
+// 获取当前用户拥有的角色
+export function getCurrentUserRoles() {
+  return vgriRequest.get({
+    url: urlObj.currentUserRolesUrl
+  })
+}
+
+// 获取用户拥有的角色
+export function getUserRoles(id) {
+  return vgriRequest.get({
+    url: '/user/' + id + '/roles'
   })
 }

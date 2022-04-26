@@ -40,7 +40,7 @@
             <el-switch v-model="scope.row.isLockedOut" @change="lockChange($event, scope.row.id)" />
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" min-width="150px">
           <template v-slot="scope">
             <el-tooltip
               v-if="rights.includes('Update') || rights.includes('Superuser')"
@@ -76,6 +76,13 @@
               @click="setRights(scope.row.id)"
               >权限管理</el-button
             >
+            <el-button
+              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              type="text"
+              size="small"
+              @click="setRoles(scope.row.id)"
+              >角色管理</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -97,19 +104,23 @@
     <edit ref="editRef" @addUser="addUser"></edit>
     <!-- 权限设置 -->
     <rights ref="rightsRef" />
+    <!-- 角色设置 -->
+    <role-set ref="roleSetRef" />
   </div>
 </template>
 3
 <script>
 import Edit from './edit.vue'
 import Rights from './rights.vue'
+import RoleSet from './roleSet.vue'
+import { ElMessage } from 'element-plus'
 import { getUserList, resetPassword, removeUser, lockUser, unlockUser } from '@/service/main/main'
 import { hasRights } from '../../../../utils/pageRights'
 import moment from 'moment'
-import { ElMessage } from 'element-plus'
+
 export default {
   name: 'user',
-  components: { Edit, Rights },
+  components: { Edit, Rights, RoleSet },
   data() {
     return {
       currentPage: 1,
@@ -185,6 +196,10 @@ export default {
     // 权限管理
     setRights(id) {
       this.$refs.rightsRef.show(id)
+    },
+    // 设置角色
+    setRoles(id) {
+      this.$refs.roleSetRef.show(id)
     },
     // 禁用/启用用户
     async lockChange(event, id) {
