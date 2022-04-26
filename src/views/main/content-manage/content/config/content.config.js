@@ -77,3 +77,13 @@ export const resetRules = {
     }
   ]
 }
+
+export const addAreaRules = {
+  name: [
+    {
+      required: true,
+      message: '请输入名称',
+      trigger: 'blur'
+    }
+  ]
+}

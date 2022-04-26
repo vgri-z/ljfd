@@ -189,7 +189,7 @@ export default {
       this.editForm = {
         dangerZoneId: '',
         name: '',
-        riskLevel: '',
+        riskLevel: 0,
         accident: '',
         emergencySolution: '',
         engineeringSolution: '',

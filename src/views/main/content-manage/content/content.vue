@@ -9,6 +9,7 @@
 import Left from './left.vue'
 import Right from './right.vue'
 import { getContentTreeList } from '../../../../service/main/content/content'
+import { emitter1 } from '../../../../utils/eventbus'
 
 export default {
   components: { Left, Right },
@@ -20,6 +21,9 @@ export default {
   },
   created() {
     this.getContentTreeList()
+    emitter1.on('updateDangerArea', () => {
+      this.getContentTreeList()
+    })
   },
   methods: {
     async getContentTreeList() {

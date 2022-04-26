@@ -5,7 +5,8 @@ const urlObj = {
   contentTreeListUrl: '/danger-zone/tree/list',
   globalDangerListUrl: '/global/danger-source/paged-list',
   addGlobalDangerUrl: '/global/danger-source',
-  GlobalDangerDetailUrl: '/global/danger-source/'
+  GlobalDangerDetailUrl: '/global/danger-source/',
+  addDangerAresUrl: '/danger-zone'
 }
 
 // 获取内容管理树子级列表
@@ -51,5 +52,28 @@ export function editGlobalDanger(data) {
 export function getGlobalDangerDetail(id) {
   return vgriRequest.get({
     url: urlObj.GlobalDangerDetailUrl + id
+  })
+}
+
+// 添加危险区域
+export function addDangerAres(data) {
+  return vgriRequest.post({
+    url: urlObj.addDangerAresUrl,
+    data
+  })
+}
+
+// 编辑危险区域
+export function editDangerAres(data) {
+  return vgriRequest.put({
+    url: urlObj.addDangerAresUrl,
+    data
+  })
+}
+
+// 删除危险区域
+export function deleteDangerAres(id) {
+  return vgriRequest.put({
+    url: urlObj.addDangerAresUrl + '/' + id
   })
 }

@@ -1,5 +1,10 @@
 <template>
   <div class="left">
+    <div class="search">
+      <el-button size="small" type="primary" @click="add">添加</el-button>
+      <el-button size="small" type="primary" @click="edit">修改</el-button>
+      <el-button size="small" type="danger" @click="remove">删除</el-button>
+    </div>
     <el-tree
       :data="treeList"
       class="content-tree"
@@ -10,12 +15,19 @@
       ref="departmentTreeRef"
       @node-click="handleNodeClick"
     />
+
+    <!-- 添加危险区域 -->
+    <edit-factory ref="editFactoryRef" />
   </div>
 </template>
 
 <script>
+import EditFactory from './editFactory.vue'
 import { emitter1 } from '../../../../utils/eventbus'
+import { deleteDangerAres } from '../../../../service/main/content/content'
+import { ElMessage } from 'element-plus'
 export default {
+  components: { EditFactory },
   data() {
     return {
       defaultProps: {
@@ -35,6 +47,22 @@ export default {
     handleNodeClick(node) {
       this.selectedNode = node
       emitter1.emit('nodeClick', node)
+    },
+    add() {
+      this.$refs.editFactoryRef.show({ isAdd: true, node: this.selectedNode })
+    },
+    edit() {
+      this.$refs.editFactoryRef.show({ isAdd: false, node: this.selectedNode })
+    },
+    async remove() {
+      const res = await deleteDangerAres(this.selectedNode.id)
+      if (res.code === 0) {
+        ElMessage({
+          message: '操作成功',
+          type: 'success'
+        })
+        emitter1.emit('updateDangerArea')
+      }
     }
   }
 }

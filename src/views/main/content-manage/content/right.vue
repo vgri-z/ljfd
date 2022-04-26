@@ -28,15 +28,18 @@
 
     <!-- 编辑 -->
     <edit ref="editRef" @updateGlobalDanger="updateGlobalDanger" />
+    <!-- 文件管理 -->
+    <file-edit ref="fileEditRef" />
   </div>
 </template>
 
 <script>
 import Edit from './edit.vue'
+import FileEdit from './file-edit.vue'
 import { emitter1 } from '../../../../utils/eventbus'
 import { getGlobalDangerList } from '../../../../service/main/content/content'
 export default {
-  components: { Edit },
+  components: { Edit, FileEdit },
   data() {
     return {
       dangerList: null,
@@ -64,6 +67,7 @@ export default {
           item.sort = index + 1
           item.videos = []
           item.caseFiles = []
+          // 分离视屏和案例文件
           item.files.forEach((file) => {
             if (file.mime.indexOf('video/') !== -1) {
               item.videos.push(file)
@@ -84,7 +88,9 @@ export default {
       this.$refs.editRef.show({ isAdd: false, data })
     },
     // 附件管理
-    fileEdit() {},
+    fileEdit() {
+      this.$refs.fileEditRef.show()
+    },
     updateGlobalDanger() {
       this.getGlobalDangerList()
     }
