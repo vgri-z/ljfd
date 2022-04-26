@@ -10,7 +10,8 @@ const urlObj = {
   currentRightsUrl: '/user/current/permissions',
   applicantTypesUrl: '/dict-catalog/dict/list',
   lockUrl: '/user/lockout',
-  unlockUrl: '/user/unlock'
+  unlockUrl: '/user/unlock',
+  currentUserFactorysUrl: '/user/current/factory'
 }
 
 // 获取用户列表
@@ -103,5 +104,12 @@ export function setRights(id, data) {
   return vgriRequest.put({
     url: urlObj.addUrl + '/' + id + '/permission',
     data
+  })
+}
+
+// 判断当前用户所属工厂
+export function getCurrentUserFactorys() {
+  return vgriRequest.get({
+    url: urlObj.currentUserFactorysUrl
   })
 }

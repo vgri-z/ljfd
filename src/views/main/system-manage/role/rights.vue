@@ -41,20 +41,20 @@ export default {
         children: 'children',
         label: 'displayName'
       },
-      roleId: null,
+      roleName: null,
       defaultCheckedKeys: [] //默认选中的权限集合
     }
   },
   methods: {
     show(id) {
       this.defaultCheckedKeys = []
-      this.roleId = id
+      this.roleName = id
       this.getRights()
       this._getRoleRights()
       this.isRightsShow = true
     },
     async _getRoleRights() {
-      const res = await getRoleRights(this.roleId)
+      const res = await getRoleRights(this.roleName)
       // console.log(res, 'roles rights')
       this.defaultCheckedKeys = res.data
       // console.log(this.defaultCheckedKeys)
@@ -71,7 +71,7 @@ export default {
       childNodes.forEach((node) => {
         nodeNames.push(node.name)
       })
-      const res = await setRights(this.roleId, nodeNames)
+      const res = await setRights(this.roleName, nodeNames)
       if (res.success) {
         ElMessage({
           message: '操作成功',

@@ -57,7 +57,7 @@
               v-if="rights.includes('Update') || rights.includes('Superuser')"
               type="text"
               size="small"
-              @click="setRoleRights(scope.row.id)"
+              @click="setRoleRights(scope.row.name)"
             >
               角色权限
             </el-button>
@@ -148,8 +148,8 @@ export default {
       this.$refs.editRef.show(data)
     },
     // 设置用户权限
-    setRoleRights(id) {
-      this.$refs.rightsRef.show(id)
+    setRoleRights(name) {
+      this.$refs.rightsRef.show(name)
     },
     updateRole() {
       this.getRoleList()

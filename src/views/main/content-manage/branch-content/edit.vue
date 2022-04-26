@@ -151,19 +151,10 @@ export default {
       this.$refs.popeverRef.tooltipRef.onClose()
     },
     show(data) {
-      if (data.isAdd) {
-        this.editForm.dangerZoneId = data.data.id // 危险区域id
-      } else {
-        this.editForm = Object.assign({}, this.editForm, data.data)
-        this.editForm.globalDangerSourceId = this.editForm.organizations[0].globalDangerSourceId
-        this.editForm.organizationIds = []
-        this.editForm.organizations.forEach((item) => {
-          this.editForm.organizationIds.push(item.organizationId)
-        })
-        this.editForm.organizations = this.editForm.organizationIds
-        // delete this.editForm.files
-        console.log(this.editForm)
-      }
+      console.log(data)
+      this.editForm = Object.assign({}, this.editForm, data)
+      this.editForm.organizations = this.editForm.organizationId
+      console.log(this.editForm)
       this.isEditShow = true
     },
     save() {

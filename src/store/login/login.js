@@ -2,6 +2,7 @@ import router from '@/router'
 import { accountLoginRequest, getCurrentUserInfo, getUserMenus } from '@/service/login/login'
 import localCache from '@/utils/cache'
 import { mapMenusToRoutes } from '../../utils/map-menu'
+import { getCurrentUserFactorys } from '@/service/main/main'
 // import { userMenus } from '../../views/main/config/menuList'
 // import { ElMessage } from 'element-plus'
 
@@ -13,7 +14,8 @@ const loginModule = {
       userInfo: {},
       userMenus: [],
       shipRegCategorys: [],
-      identityCards: []
+      identityCards: [],
+      userFactory: {}
     }
   },
   getters: {},
@@ -37,6 +39,9 @@ const loginModule = {
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+    },
+    changeUserFactory(state, payload) {
+      state.userFactory = payload
     }
   },
   actions: {
@@ -69,6 +74,11 @@ const loginModule = {
         localCache.cacheSet('firstMenu', '')
       }
 
+      // 获取当前用户所在工厂
+      const currentFactoryRes = await getCurrentUserFactorys()
+      localCache.cacheSet('currentUserFactory', currentFactoryRes.data)
+      commit('changeUserFactory', currentFactoryRes.data)
+
       // 进入主页
       router.push('/main')
     },
@@ -85,6 +95,11 @@ const loginModule = {
       const userMenus = localCache.cacheGet('userMenus')
       if (userMenus) {
         commit('changeUserMenus', userMenus)
+      }
+
+      const userFactory = localCache.cacheGet('currentUserFactory')
+      if (userMenus) {
+        commit('changeUserFactory', userFactory)
       }
     }
   }

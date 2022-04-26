@@ -1,5 +1,5 @@
 <template>
-  <div class="department">
+  <div class="content">
     <left :treeList="treeList" />
     <right />
   </div>
@@ -28,7 +28,7 @@ export default {
   methods: {
     async getContentTreeList() {
       const res = await getContentTreeList()
-      console.log(res)
+      // console.log(res)
       this.treeList = res.data
     }
   }
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style lang="less">
-.department {
+.content {
   width: 100%;
   height: 100%;
   display: flex;

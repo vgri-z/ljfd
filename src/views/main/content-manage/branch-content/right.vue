@@ -1,8 +1,5 @@
 <template>
   <div class="right">
-    <div class="add">
-      <el-button type="primary" @click="add">添加危险源</el-button>
-    </div>
     <div class="danger-info">
       <el-table :data="dangerList" border style="width: 100%">
         <el-table-column prop="sort" label="序号"></el-table-column>
@@ -29,22 +26,23 @@
     <!-- 编辑 -->
     <edit ref="editRef" @updateGlobalDanger="updateGlobalDanger" />
     <!-- 文件管理 -->
-    <file-edit ref="fileEditRef" @updateGlobalDanger="updateGlobalDanger" />
+    <!-- <file-edit ref="fileEditRef" @updateGlobalDanger="updateGlobalDanger" /> -->
   </div>
 </template>
 
 <script>
 import Edit from './edit.vue'
-import FileEdit from './file-edit.vue'
 import { emitter1 } from '../../../../utils/eventbus'
-import { getGlobalDangerList } from '../../../../service/main/content/content'
+import { getBranchDangerList } from '../../../../service/main/content/content'
+import { ElMessage } from 'element-plus/lib/components'
 export default {
-  components: { Edit, FileEdit },
+  components: { Edit },
   data() {
     return {
       dangerList: null,
       searchOptions: {
         DangerZoneId: '',
+        OrganizationId: '',
         Index: 1,
         Size: 10
       },
@@ -53,15 +51,23 @@ export default {
     }
   },
   created() {
+    this.searchOptions.OrganizationId = this.$store.state.login.userFactory.id
     emitter1.on('nodeClick', (node) => {
       this.dangerNode = node
       this.searchOptions.DangerZoneId = node.id
-      this.getGlobalDangerList()
+      this.getBranchDangerList()
     })
   },
   methods: {
-    async getGlobalDangerList() {
-      const res = await getGlobalDangerList(this.searchOptions)
+    async getBranchDangerList() {
+      if (!this.searchOptions.OrganizationId) {
+        ElMessage({
+          message: '当前用户不属于任何工厂',
+          type: 'warning'
+        })
+        return false
+      }
+      const res = await getBranchDangerList(this.searchOptions)
       if (res.data) {
         res.data.list.forEach((item, index) => {
           item.sort = index + 1
@@ -78,21 +84,27 @@ export default {
         })
         this.dangerList = res.data.list
         this.total = res.data.total
-        console.log(this.dangerList)
+        // console.log(this.dangerList)
       }
     },
-    add() {
-      this.$refs.editRef.show({ isAdd: true, data: this.dangerNode })
-    },
     edit(data) {
-      this.$refs.editRef.show({ isAdd: false, data })
+      // 分厂没有添加危险源，只能修改集团的危险源，分厂提交修改后，如果审核通过，就会有id，未提交修改或者审核不通过就没有id
+      this.$refs.editRef.show(data)
     },
     // 附件管理
     fileEdit(data) {
-      this.$refs.fileEditRef.show(data)
+      if (data.id) {
+        // 有id 可上传附件
+        this.$refs.fileEditRef.show(data)
+      } else {
+        ElMessage({
+          message: '分厂无法修改集团内容，请先编辑危险源',
+          type: 'warning'
+        })
+      }
     },
     updateGlobalDanger() {
-      this.getGlobalDangerList()
+      this.getBranchDangerList()
     }
   }
 }
