@@ -62,7 +62,7 @@ export const resetRules = {
       trigger: 'blur'
     }
   ],
-  organizations: [
+  organizationId: [
     {
       required: true,
       message: '请选择机构',

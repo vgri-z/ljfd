@@ -66,10 +66,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="24" prop="name">
-            <el-form-item label="机构" prop="organizations">
+            <el-form-item label="机构" prop="organizationId">
               <el-select
-                v-model="editForm.organizations"
-                multiple
+                disabled
+                v-model="editForm.organizationId"
                 placeholder="请选择机构"
                 style="width: 60%"
               >
@@ -95,8 +95,8 @@
 </template>
 
 <script>
-import { resetRules } from './config/content.config'
-import { addGlobalDanger, editGlobalDanger } from '../../../../service/main/content/content'
+import { resetRules } from './config/branchContent.config'
+import { addBranchDanger, editBranchDanger } from '../../../../service/main/content/content'
 import { getChildrenDepartment } from '../../../../service/main/department/department'
 import { getDepartmentList } from '../../../../service/main/department/department'
 import { ElMessage } from 'element-plus'
@@ -115,14 +115,13 @@ export default {
         protection: '',
         suggestions: '',
         trainingSolution: '',
-        organizations: [],
-        organizationNames: ''
+        organizationId: ''
       },
       defaultProps: {
         children: 'children',
         label: 'name'
       },
-      title: '添加',
+      title: '编辑',
       rules: resetRules,
       departmentList: null,
       riskLevels: [
@@ -145,10 +144,9 @@ export default {
       this.departmentList = res.data
     },
     show(data) {
-      console.log(data)
+      console.log(data, 'data')
       this.editForm = Object.assign({}, this.editForm, data)
-      this.editForm.organizations = this.editForm.organizationId
-      console.log(this.editForm)
+      console.log(this.editForm, 'editForm')
       this.isEditShow = true
     },
     save() {
@@ -158,10 +156,10 @@ export default {
           let res = null
           if (this.editForm.id) {
             // 编辑
-            res = await editGlobalDanger(this.editForm)
+            res = await editBranchDanger(this.editForm)
           } else {
             // 新增
-            res = await addGlobalDanger(this.editForm)
+            res = await addBranchDanger(this.editForm)
           }
           if (res.success) {
             ElMessage({
@@ -169,7 +167,7 @@ export default {
               type: 'success'
             })
             this.isEditShow = false
-            this.$emit('updateGlobalDanger')
+            this.$emit('updateBranchDanger')
           }
         }
       })
