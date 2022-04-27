@@ -8,6 +8,30 @@
       :close-on-click-modal="false"
       @closed="cancel"
     >
+      <!-- 图片 -->
+      <div class="item images">
+        <div class="title">图片信息</div>
+        <el-upload
+          class="upload"
+          action="string"
+          multiple
+          ref="imgsUploadRef"
+          :before-upload="imgsBeforeUpload"
+          :auto-upload="false"
+          :file-list="imgsList"
+          :http-request="uploadImgs"
+        >
+          <template #trigger>
+            <el-button type="primary">选择图片</el-button>
+          </template>
+          <el-button style="margin-left: 10px" type="success" @click="submitImgsUpload"
+            >图片上传</el-button
+          >
+          <template #tip>
+            <div class="el-upload__tip">注：上传jpg、jpeg、png、svg等格式图片</div>
+          </template>
+        </el-upload>
+      </div>
       <!-- 案例文件 -->
       <div class="item cases">
         <div class="title">案例信息</div>
@@ -24,21 +48,35 @@
           <template #trigger>
             <el-button type="primary">选择案例文件</el-button>
           </template>
-          <el-button style="margin-left: 10px" type="success" @click="submitUpload"
+          <el-button style="margin-left: 10px" type="success" @click="submitCaseUpload"
             >案例文件上传</el-button
           >
           <template #tip>
-            <div class="el-upload__tip">注：上传图片、pdf、word、ppt等</div>
+            <div class="el-upload__tip">注：pdf、doc、ppt等格式文件</div>
           </template>
         </el-upload>
       </div>
       <!-- 视频文件 -->
       <div class="item videos">
         <div class="title">视频信息</div>
-        <el-upload class="upload-demo" action="" :file-list="videoList">
-          <el-button type="primary">视频上传</el-button>
+        <el-upload
+          class="upload"
+          action="string"
+          multiple
+          ref="videoUploadRef"
+          :before-upload="videoBeforeUpload"
+          :auto-upload="false"
+          :file-list="videoList"
+          :http-request="uploadVideo"
+        >
+          <template #trigger>
+            <el-button type="primary">选择视频文件</el-button>
+          </template>
+          <el-button style="margin-left: 10px" type="success" @click="submitVideoUpload"
+            >视频文件上传</el-button
+          >
           <template #tip>
-            <div class="el-upload__tip">注：上传MP4、wmv等格式视频</div>
+            <div class="el-upload__tip">注：请上传mp4、wvm等格式文件</div>
           </template>
         </el-upload>
       </div>
@@ -60,6 +98,7 @@ export default {
   data() {
     return {
       isFileShow: false,
+      imgsList: [], // 图片
       caseList: [], // 案例文件
       videoList: [], // 视频
       dangerData: null,
@@ -80,35 +119,75 @@ export default {
       console.log(this.dangerData)
       this.isFileShow = true
     },
-    // 案例文件上传之前回调
-    caseBeforeUpload(file) {
+    // 文件上传之前回调(通用)
+    /**
+     * @params file 文件
+     * @params formatArr 文件格式数组
+     * @params message 提示消息
+     */
+    beforeUpload(file, formatArr, message) {
       const fileSuffix = file.name.substring(file.name.lastIndexOf('.') + 1)
-      const whiteList = ['pdf', 'pptx', 'ppt', 'doc', 'docx', 'jpeg', 'png']
+      const whiteList = formatArr
       if (whiteList.indexOf(fileSuffix) === -1) {
         ElMessage({
-          message: '请上传图片、pdf、word、ppt文件',
+          message: message,
           type: 'warning'
         })
         return false
       }
-      // const isLt2M = file.size / 1024 / 1024 < 2
-      // if (!isLt2M) {
-      //   this.$msg('上传文件大小不能超过 2MB', 'error')
-      //   return false
-      // }
     },
-    // 调用上传
-    submitUpload() {
-      this.$refs.caseUploadRef.submit()
-    },
-    // 上传
-    async uploadCase(params) {
+    // 文件手动上传(通用)
+    async fileUpload(params) {
       let fd = new FormData()
       fd.append('file', params.file)
       const res = await fileUpload(fd)
       if (res.code === 0) {
         this.files.push(res.data)
       }
+    },
+    // 图片上传之前回调
+    imgsBeforeUpload(file) {
+      this.beforeUpload(
+        file,
+        ['jpeg', 'jpg', 'png', 'svg', 'gif', 'tif', 'gif'],
+        '请上传符合格式的图片'
+      )
+    },
+    // 案例文件上传之前回调
+    caseBeforeUpload(file) {
+      this.beforeUpload(
+        file,
+        ['pdf', 'pptx', 'ppt', 'doc', 'docx'],
+        '请上传pdf、doc、ppt格式的文件'
+      )
+    },
+    // 视频文件上传之前回调
+    videoBeforeUpload(file) {
+      this.beforeUpload(file, ['mp4', 'wvm'], '请上传符合格式的视频')
+    },
+    // 调用上传(图片)
+    submitImgsUpload() {
+      this.$refs.imgsUploadRef.submit()
+    },
+    // 调用上传(案例)
+    submitCaseUpload() {
+      this.$refs.caseUploadRef.submit()
+    },
+    // 调用上传(视频)
+    submitVideoUpload() {
+      this.$refs.videoUploadRef.submit()
+    },
+    // 上传(图片)
+    async uploadImgs(params) {
+      this.fileUpload(params)
+    },
+    // 上传(案例)
+    async uploadCase(params) {
+      this.fileUpload(params)
+    },
+    // 上传(视频)
+    async uploadVideo(params) {
+      this.fileUpload(params)
     },
     // 保存时，调用编辑危险源的接口，将文件保存进对应的危险源
     async save() {
@@ -135,6 +214,9 @@ export default {
   .title {
     margin-bottom: 10px;
   }
+}
+.images {
+  margin-bottom: 40px;
 }
 .cases {
   margin-bottom: 40px;

@@ -7,6 +7,11 @@
       <el-table :data="dangerList" border style="width: 100%">
         <el-table-column prop="sort" label="序号"></el-table-column>
         <el-table-column prop="name" label="危险源或潜在事件"></el-table-column>
+        <el-table-column label="图片">
+          <template #default="scope">
+            {{ scope.row.imagesFiles.length }}
+          </template>
+        </el-table-column>
         <el-table-column label="视频">
           <template #default="scope">
             {{ scope.row.videos.length }}
@@ -67,10 +72,13 @@ export default {
           item.sort = index + 1
           item.videos = []
           item.caseFiles = []
+          item.imagesFiles = []
           // 分离视屏和案例文件
           item.files.forEach((file) => {
             if (file.mime.indexOf('video/') !== -1) {
               item.videos.push(file)
+            } else if (file.mime.indexOf('image/') !== -1) {
+              item.imagesFiles.push(file)
             } else {
               item.caseFiles.push(file)
             }

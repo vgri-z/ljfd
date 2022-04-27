@@ -70,14 +70,14 @@
               </template>
             </el-popconfirm>
             <el-button
-              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              v-if="rights.includes('ManagePermission') || rights.includes('Superuser')"
               type="text"
               size="small"
               @click="setRights(scope.row.id)"
               >权限管理</el-button
             >
             <el-button
-              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              v-if="rights.includes('ManageRole') || rights.includes('Superuser')"
               type="text"
               size="small"
               @click="setRoles(scope.row.id)"
