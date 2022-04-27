@@ -86,3 +86,19 @@ export function getBranchDangerList(params) {
     params
   })
 }
+
+// 分厂危险源添加
+export function addBranchDanger(data) {
+  return vgriRequest.post({
+    url: '/danger-source',
+    data
+  })
+}
+
+// 分厂危险源更新
+export function editBranchDanger(data) {
+  return vgriRequest.put({
+    url: '/danger-source',
+    data
+  })
+}

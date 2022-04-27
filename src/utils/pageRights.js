@@ -13,7 +13,7 @@ export async function hasRights() {
   // 请求权限
   const userId = localCache.cacheGet('userInfo').id // 当前用户的id
   const rightsRes = await getCurrentUserRights(userId) // 获取当前用户的权限
-  // console.log(rightsRes, 'rightRes')
+  console.log(rightsRes, 'rightRes')
 
   const activeMenu = localCache.cacheGet('rightMenu') // 取出当前的权限菜单
 
@@ -27,12 +27,12 @@ export async function hasRights() {
       rightsRes.data.forEach((item) => {
         if (item.includes(activeMenu.permission.split('.')[0])) {
           // 权限形式为User.Create，所以取出后面的权限名
-          rightsArr.push(item.split('.')[1])
+          rightsArr.push(item)
         }
       })
     }
   }
-  // console.log(rightsArr, 'rightsArr')
+  console.log(rightsArr, 'rightsArr')
   return rightsArr
 }
 

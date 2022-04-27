@@ -1,7 +1,7 @@
 <template>
   <div class="branch-content">
     <left :treeList="treeList" />
-    <right />
+    <right :rights="rights" />
   </div>
 </template>
 
@@ -9,20 +9,29 @@
 import Left from './left.vue'
 import Right from './right.vue'
 import { emitter1 } from '../../../../utils/eventbus'
+import localCache from '../../../../utils/cache'
 import { getContentTreeList } from '../../../../service/main/content/content'
+// import { hasRights } from '@/utils/pageRights'
+
 export default {
   components: { Left, Right },
   data() {
     return {
       treeList: [],
-      departmentInfo: {}
+      departmentInfo: {},
+      rights: []
     }
   },
   created() {
+    this.rights = localCache.cacheGet('userRights')
     this.getContentTreeList()
     emitter1.on('updateDangerArea', () => {
       this.getContentTreeList()
     })
+    // hasRights().then((res) => {
+    //   // console.log(res)
+    //   this.rights = res
+    // })
   },
   methods: {
     async getContentTreeList() {

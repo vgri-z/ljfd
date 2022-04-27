@@ -20,7 +20,7 @@
     <div class="table">
       <div class="add">
         <el-button
-          v-if="rights.includes('Create') || rights.includes('Superuser')"
+          v-if="rights.includes('User.Create') || rights.includes('Superuser')"
           type="primary"
           @click="add"
           >添加用户</el-button
@@ -35,6 +35,11 @@
             {{ scope.row.organizationStrs.join(',') }}
           </template>
         </el-table-column>
+        <el-table-column label="用户角色">
+          <template v-slot="scope">
+            {{ scope.row.roleNames.join(',') }}
+          </template>
+        </el-table-column>
         <el-table-column label="是否禁用">
           <template v-slot="scope">
             <el-switch v-model="scope.row.isLockedOut" @change="lockChange($event, scope.row.id)" />
@@ -43,7 +48,7 @@
         <el-table-column label="操作" min-width="150px">
           <template v-slot="scope">
             <el-tooltip
-              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              v-if="rights.includes('User.Update') || rights.includes('Superuser')"
               class="box-item"
               effect="dark"
               content="默认密码为 Pwd@123"
@@ -54,14 +59,14 @@
               </el-button>
             </el-tooltip>
             <el-button
-              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              v-if="rights.includes('User.Update') || rights.includes('Superuser')"
               type="text"
               size="small"
               @click="edit(scope.row)"
               >编辑</el-button
             >
             <el-popconfirm
-              v-if="rights.includes('Delete') || rights.includes('Superuser')"
+              v-if="rights.includes('User.Delete') || rights.includes('Superuser')"
               title="是否确认删除该用户？"
               @confirm="remove(scope.row.id)"
             >
@@ -70,14 +75,14 @@
               </template>
             </el-popconfirm>
             <el-button
-              v-if="rights.includes('ManagePermission') || rights.includes('Superuser')"
+              v-if="rights.includes('User.ManagePermission') || rights.includes('Superuser')"
               type="text"
               size="small"
               @click="setRights(scope.row.id)"
               >权限管理</el-button
             >
             <el-button
-              v-if="rights.includes('ManageRole') || rights.includes('Superuser')"
+              v-if="rights.includes('User.ManageRole') || rights.includes('Superuser')"
               type="text"
               size="small"
               @click="setRoles(scope.row.id)"
@@ -114,8 +119,9 @@ import Edit from './edit.vue'
 import Rights from './rights.vue'
 import RoleSet from './roleSet.vue'
 import { ElMessage } from 'element-plus'
+import localCache from '../../../../utils/cache.js'
 import { getUserList, resetPassword, removeUser, lockUser, unlockUser } from '@/service/main/main'
-import { hasRights } from '../../../../utils/pageRights'
+// import { hasRights } from '../../../../utils/pageRights'
 import moment from 'moment'
 
 export default {
@@ -136,10 +142,11 @@ export default {
   },
   created() {
     this._getUserList()
-    hasRights().then((res) => {
-      // console.log(res)
-      this.rights = res
-    })
+    this.rights = localCache.cacheGet('userRights')
+    // hasRights().then((res) => {
+    //   // console.log(res)
+    //   this.rights = res
+    // })
   },
   methods: {
     search() {
@@ -158,8 +165,12 @@ export default {
       this.userList = res.data.list.map((item) => {
         item.creationTime = moment(item.creationTime).format('YYYY-MM-DD')
         item.organizationStrs = []
+        item.roleNames = []
         item.organizations.forEach((m) => {
           item.organizationStrs.push(m.name)
+        })
+        item.roles.forEach((o) => {
+          item.roleNames.push(o.name)
         })
         return item
       })

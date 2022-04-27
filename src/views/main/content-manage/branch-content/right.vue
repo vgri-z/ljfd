@@ -4,6 +4,11 @@
       <el-table :data="dangerList" border style="width: 100%">
         <el-table-column prop="sort" label="序号"></el-table-column>
         <el-table-column prop="name" label="危险源或潜在事件"></el-table-column>
+        <el-table-column label="图片">
+          <template #default="scope">
+            {{ scope.row.imagesFiles.length }}
+          </template>
+        </el-table-column>
         <el-table-column label="视频">
           <template #default="scope">
             {{ scope.row.videos.length }}
@@ -16,8 +21,20 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="fileEdit(scope.row)">附件管理</el-button>
+            <el-button
+              v-if="rights.includes('DangerSource.Update') || rights.includes('Superuser')"
+              type="text"
+              size="small"
+              @click="edit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              v-if="rights.includes('DangerSource.Update') || rights.includes('Superuser')"
+              type="text"
+              size="small"
+              @click="fileEdit(scope.row)"
+              >附件管理</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -50,6 +67,12 @@ export default {
       dangerNode: null
     }
   },
+  props: {
+    rights: {
+      type: Array,
+      default: () => []
+    }
+  },
   created() {
     this.searchOptions.OrganizationId = this.$store.state.login.userFactory.id
     emitter1.on('nodeClick', (node) => {
@@ -73,10 +96,13 @@ export default {
           item.sort = index + 1
           item.videos = []
           item.caseFiles = []
-          // 分离视屏和案例文件
+          item.imagesFiles = []
+          // 分离视频、图片和案例文件
           item.files.forEach((file) => {
             if (file.mime.indexOf('video/') !== -1) {
               item.videos.push(file)
+            } else if (file.mime.indexOf('image/') !== -1) {
+              item.imagesFiles.push(file)
             } else {
               item.caseFiles.push(file)
             }

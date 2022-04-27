@@ -3,6 +3,7 @@ import { accountLoginRequest, getCurrentUserInfo, getUserMenus } from '@/service
 import localCache from '@/utils/cache'
 import { mapMenusToRoutes } from '../../utils/map-menu'
 import { getCurrentUserFactorys } from '@/service/main/main'
+import { getCurrentUserRights } from '@/service/main/main'
 // import { userMenus } from '../../views/main/config/menuList'
 // import { ElMessage } from 'element-plus'
 
@@ -42,6 +43,9 @@ const loginModule = {
     },
     changeUserFactory(state, payload) {
       state.userFactory = payload
+    },
+    changeUserRights(state, payload) {
+      state.rights = payload
     }
   },
   actions: {
@@ -74,6 +78,11 @@ const loginModule = {
         localCache.cacheSet('firstMenu', '')
       }
 
+      // 获取用户权限列表
+      const rightsRes = await getCurrentUserRights()
+      commit('changeUserRights', rightsRes.data)
+      localCache.cacheSet('userRights', rightsRes.data)
+
       // 获取当前用户所在工厂
       const currentFactoryRes = await getCurrentUserFactorys()
       localCache.cacheSet('currentUserFactory', currentFactoryRes.data)
@@ -100,6 +109,11 @@ const loginModule = {
       const userFactory = localCache.cacheGet('currentUserFactory')
       if (userMenus) {
         commit('changeUserFactory', userFactory)
+      }
+
+      const userRights = localCache.cacheGet('userRights')
+      if (userMenus) {
+        commit('changeUserRights', userRights)
       }
     }
   }

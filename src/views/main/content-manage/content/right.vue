@@ -1,7 +1,12 @@
 <template>
   <div class="right">
     <div class="add">
-      <el-button type="primary" @click="add">添加危险源</el-button>
+      <el-button
+        v-if="rights.includes('GlobalDangerSource.Create') || rights.includes('Superuser')"
+        type="primary"
+        @click="add"
+        >添加危险源</el-button
+      >
     </div>
     <div class="danger-info">
       <el-table :data="dangerList" border style="width: 100%">
@@ -24,8 +29,20 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="fileEdit(scope.row)">附件管理</el-button>
+            <el-button
+              v-if="rights.includes('GlobalDangerSource.Update') || rights.includes('Superuser')"
+              type="text"
+              size="small"
+              @click="edit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              v-if="rights.includes('GlobalDangerSource.Update') || rights.includes('Superuser')"
+              type="text"
+              size="small"
+              @click="fileEdit(scope.row)"
+              >附件管理</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -57,6 +74,12 @@ export default {
       dangerNode: null
     }
   },
+  props: {
+    rights: {
+      type: Array,
+      default: () => []
+    }
+  },
   created() {
     emitter1.on('nodeClick', (node) => {
       this.dangerNode = node
@@ -73,7 +96,7 @@ export default {
           item.videos = []
           item.caseFiles = []
           item.imagesFiles = []
-          // 分离视屏和案例文件
+          // 分离视频、图片和案例文件
           item.files.forEach((file) => {
             if (file.mime.indexOf('video/') !== -1) {
               item.videos.push(file)
@@ -86,7 +109,6 @@ export default {
         })
         this.dangerList = res.data.list
         this.total = res.data.total
-        console.log(this.dangerList)
       }
     },
     add() {

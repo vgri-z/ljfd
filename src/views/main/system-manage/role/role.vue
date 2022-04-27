@@ -20,7 +20,7 @@
     <div class="table">
       <div class="add">
         <el-button
-          v-if="rights.includes('Create') || rights.includes('Superuser')"
+          v-if="rights.includes('Role.Create') || rights.includes('Superuser')"
           type="primary"
           @click="add"
           >添加</el-button
@@ -32,7 +32,7 @@
         <el-table-column label="操作">
           <template v-slot="scope">
             <el-button
-              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              v-if="rights.includes('Role.Update') || rights.includes('Superuser')"
               :disabled="scope.row.isStatic"
               type="text"
               size="small"
@@ -43,7 +43,7 @@
             <el-popconfirm title="是否确认删除该角色？" @confirm="remove(scope.row.id)">
               <template #reference>
                 <el-button
-                  v-if="rights.includes('Delete') || rights.includes('Superuser')"
+                  v-if="rights.includes('Role.Delete') || rights.includes('Superuser')"
                   :disabled="scope.row.isStatic"
                   type="text"
                   style="color: #f56c6c"
@@ -54,7 +54,7 @@
               </template>
             </el-popconfirm>
             <el-button
-              v-if="rights.includes('Update') || rights.includes('Superuser')"
+              v-if="rights.includes('Role.Update') || rights.includes('Superuser')"
               type="text"
               size="small"
               @click="setRoleRights(scope.row.name)"
@@ -90,7 +90,8 @@
 import { getRoleList, deleteRole } from '../../../../service/main/role/role'
 import Edit from './edit.vue'
 import Rights from './rights.vue'
-import { hasRights } from '../../../../utils/pageRights'
+import localCache from '../../../../utils/cache'
+// import { hasRights } from '../../../../utils/pageRights'
 import { ElMessage } from 'element-plus'
 export default {
   components: {
@@ -112,10 +113,11 @@ export default {
   },
   created() {
     this.getRoleList()
-    hasRights().then((res) => {
-      // console.log(res)
-      this.rights = res
-    })
+    this.rights = localCache.cacheGet('userRights')
+    // hasRights().then((res) => {
+    //   // console.log(res)
+    //   this.rights = res
+    // })
   },
   methods: {
     search() {

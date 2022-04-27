@@ -144,12 +144,6 @@ export default {
       const res = await getDepartmentList()
       this.departmentList = res.data
     },
-    handleNodeClick(data) {
-      console.log(data)
-      this.editForm.organizations = [data.id]
-      this.editForm.organizationNames = data.name
-      this.$refs.popeverRef.tooltipRef.onClose()
-    },
     show(data) {
       console.log(data)
       this.editForm = Object.assign({}, this.editForm, data)
@@ -166,7 +160,6 @@ export default {
             // 编辑
             res = await editGlobalDanger(this.editForm)
           } else {
-            console.log('add add')
             // 新增
             res = await addGlobalDanger(this.editForm)
           }

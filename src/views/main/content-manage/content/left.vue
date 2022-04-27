@@ -1,9 +1,27 @@
 <template>
   <div class="left">
     <div class="search">
-      <el-button size="small" type="primary" @click="add">添加</el-button>
-      <el-button size="small" type="primary" @click="edit">修改</el-button>
-      <el-button size="small" type="danger" @click="remove">删除</el-button>
+      <el-button
+        v-if="rights.includes('DangerZone.Create') || rights.includes('Superuser')"
+        size="small"
+        type="primary"
+        @click="add"
+        >添加</el-button
+      >
+      <el-button
+        v-if="rights.includes('DangerZone.Update') || rights.includes('Superuser')"
+        size="small"
+        type="primary"
+        @click="edit"
+        >修改</el-button
+      >
+      <el-button
+        v-if="rights.includes('DangerZone.Delete') || rights.includes('Superuser')"
+        size="small"
+        type="danger"
+        @click="remove"
+        >删除</el-button
+      >
     </div>
     <el-tree
       :data="treeList"
@@ -39,6 +57,10 @@ export default {
   },
   props: {
     treeList: {
+      type: Array,
+      default: () => []
+    },
+    rights: {
       type: Array,
       default: () => []
     }
