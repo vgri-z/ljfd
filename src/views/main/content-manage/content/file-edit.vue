@@ -12,25 +12,23 @@
       <div class="item images">
         <div class="title">图片信息</div>
         <el-upload
-          class="upload"
-          action="string"
-          multiple
+          action=""
+          accept="image/*"
           ref="imgsUploadRef"
-          :before-upload="imgsBeforeUpload"
-          :auto-upload="false"
+          list-type="picture-card"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
           :file-list="imgsList"
+          :before-upload="imgsBeforeUpload"
+          :auto-upload="true"
           :http-request="uploadImgs"
         >
-          <template #trigger>
-            <el-button type="primary">选择图片</el-button>
-          </template>
-          <el-button style="margin-left: 10px" type="success" @click="submitImgsUpload"
-            >图片上传</el-button
-          >
-          <template #tip>
-            <div class="el-upload__tip">注：上传jpg、jpeg、png、svg等格式图片</div>
-          </template>
+          <el-icon><Plus /></el-icon>
         </el-upload>
+
+        <el-dialog v-model="dialogVisible">
+          <img w-full :src="dialogImageUrl" alt="Preview Image" />
+        </el-dialog>
       </div>
       <!-- 案例文件 -->
       <div class="item cases">
@@ -41,16 +39,17 @@
           multiple
           ref="caseUploadRef"
           :before-upload="caseBeforeUpload"
-          :auto-upload="false"
+          :on-remove="handleRemove"
+          :auto-upload="true"
           :file-list="caseList"
           :http-request="uploadCase"
         >
           <template #trigger>
             <el-button type="primary">选择案例文件</el-button>
           </template>
-          <el-button style="margin-left: 10px" type="success" @click="submitCaseUpload"
+          <!-- <el-button style="margin-left: 10px" type="success" @click="submitCaseUpload"
             >案例文件上传</el-button
-          >
+          > -->
           <template #tip>
             <div class="el-upload__tip">注：pdf、doc、ppt等格式文件</div>
           </template>
@@ -65,16 +64,17 @@
           multiple
           ref="videoUploadRef"
           :before-upload="videoBeforeUpload"
-          :auto-upload="false"
+          :on-remove="handleRemove"
+          :auto-upload="true"
           :file-list="videoList"
           :http-request="uploadVideo"
         >
           <template #trigger>
             <el-button type="primary">选择视频文件</el-button>
           </template>
-          <el-button style="margin-left: 10px" type="success" @click="submitVideoUpload"
+          <!-- <el-button style="margin-left: 10px" type="success" @click="submitVideoUpload"
             >视频文件上传</el-button
-          >
+          > -->
           <template #tip>
             <div class="el-upload__tip">注：请上传mp4、wvm等格式文件</div>
           </template>
@@ -102,7 +102,9 @@ export default {
       caseList: [], // 案例文件
       videoList: [], // 视频
       dangerData: null,
-      files: []
+      files: [],
+      dialogVisible: false,
+      dialogImageUrl: ''
     }
   },
   emits: ['updateGlobalDanger'],
@@ -116,6 +118,20 @@ export default {
         this.dangerData.organizationIds.push(item.organizationId)
       })
       this.dangerData.organizations = this.dangerData.organizationIds
+      // 图片/案例/视频回显
+      const baseUrl = 'http://114.55.1.241:8090/'
+      this.dangerData.imagesFiles.forEach((item) => {
+        item.url = baseUrl + item.uri
+      })
+      this.dangerData.caseFiles.forEach((item) => {
+        item.url = baseUrl + item.uri
+      })
+      this.dangerData.videos.forEach((item) => {
+        item.url = baseUrl + item.uri
+      })
+      this.imgsList = this.dangerData.imagesFiles
+      this.caseList = this.dangerData.caseFiles
+      this.videoList = this.dangerData.videos
       console.log(this.dangerData)
       this.isFileShow = true
     },
@@ -134,6 +150,8 @@ export default {
           type: 'warning'
         })
         return false
+      } else {
+        return true
       }
     },
     // 文件手动上传(通用)
@@ -147,6 +165,7 @@ export default {
     },
     // 图片上传之前回调
     imgsBeforeUpload(file) {
+      console.log('图片上传')
       this.beforeUpload(
         file,
         ['jpeg', 'jpg', 'png', 'svg', 'gif', 'tif', 'gif'],
@@ -155,15 +174,24 @@ export default {
     },
     // 案例文件上传之前回调
     caseBeforeUpload(file) {
-      this.beforeUpload(
+      const bool = this.beforeUpload(
         file,
         ['pdf', 'pptx', 'ppt', 'doc', 'docx'],
         '请上传pdf、doc、ppt格式的文件'
       )
+      // 文件类型不符合的话，清除这个文件
+      if (!bool) {
+        const index = this.caseList.findIndex((item) => item.uid === file.uid)
+        this.caseList.splice(index, 1)
+      }
     },
     // 视频文件上传之前回调
     videoBeforeUpload(file) {
-      this.beforeUpload(file, ['mp4', 'wvm'], '请上传符合格式的视频')
+      const bool = this.beforeUpload(file, ['mp4', 'wvm'], '请上传符合格式的视频')
+      if (!bool) {
+        const index = this.videoList.findIndex((item) => item.uid === file.uid)
+        this.videoList.splice(index, 1)
+      }
     },
     // 调用上传(图片)
     submitImgsUpload() {
@@ -204,7 +232,22 @@ export default {
         this.isFileShow = false
       }
     },
-    cancel() {}
+    // 图片预览
+    handlePictureCardPreview(file) {
+      console.log(file)
+      this.dialogVisible = true
+      this.dialogImageUrl = file.url
+    },
+    // 文件移除
+    handleRemove(file) {
+      console.log(file)
+      const index = this.dangerData.files.findIndex((item) => item.uid === file.uid)
+      this.dangerData.files.splice(index, 1)
+      console.log(this.dangerData.files)
+    },
+    cancel() {
+      this.isFileShow = false
+    }
   }
 }
 </script>
@@ -217,6 +260,16 @@ export default {
 }
 .images {
   margin-bottom: 40px;
+
+  :deep(.el-upload-list__item) {
+    width: 100px;
+    height: 100px;
+  }
+
+  :deep(.el-upload.el-upload--picture-card) {
+    width: 100px;
+    height: 100px;
+  }
 }
 .cases {
   margin-bottom: 40px;
