@@ -74,7 +74,7 @@ export default {
     }
   },
   created() {
-    this.searchOptions.OrganizationId = this.$store.state.login.userFactory.id
+    this.searchOptions.OrganizationId = this.$store.state.login.userFactory?.id
     emitter1.on('nodeClick', (node) => {
       this.dangerNode = node
       this.searchOptions.DangerZoneId = node.id

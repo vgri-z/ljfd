@@ -65,7 +65,12 @@
               <el-input v-model="editForm.suggestions" placeholder="请输入应急措施" />
             </el-form-item>
           </el-col>
-          <el-col :span="24" prop="name">
+          <el-col :span="24">
+            <el-form-item label="修改说明" prop="description">
+              <el-input v-model="editForm.description" placeholder="请输入修改说明" />
+            </el-form-item>
+          </el-col>
+          <!-- <el-col :span="24" prop="name">
             <el-form-item label="机构" prop="organizationId">
               <el-select
                 disabled
@@ -81,7 +86,7 @@
                 />
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
       </el-form>
       <template #footer>
@@ -96,8 +101,7 @@
 
 <script>
 import { resetRules } from './config/branchContent.config'
-import { addBranchDanger, editBranchDanger } from '../../../../service/main/content/content'
-import { getChildrenDepartment } from '../../../../service/main/department/department'
+import { addDangerDraft } from '../../../../service/main/content/content'
 import { getDepartmentList } from '../../../../service/main/department/department'
 import { ElMessage } from 'element-plus'
 export default {
@@ -135,10 +139,6 @@ export default {
     this.getDepartmentList()
   },
   methods: {
-    async loadNode(node, resolve) {
-      const res = await getChildrenDepartment({ ParentId: node.data.id })
-      resolve(res.data)
-    },
     async getDepartmentList() {
       const res = await getDepartmentList()
       this.departmentList = res.data
@@ -154,20 +154,14 @@ export default {
       this.$refs.editFormRef.validate(async (valid) => {
         if (valid) {
           let res = null
-          if (this.editForm.id) {
-            // 编辑
-            res = await editBranchDanger(this.editForm)
-          } else {
-            // 新增
-            res = await addBranchDanger(this.editForm)
-          }
+          // 新增草稿
+          res = await addDangerDraft(this.editForm)
           if (res.success) {
             ElMessage({
               message: '操作成功',
               type: 'success'
             })
             this.isEditShow = false
-            this.$emit('updateBranchDanger')
           }
         }
       })

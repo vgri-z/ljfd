@@ -75,6 +75,13 @@ export const resetRules = {
       message: '请选择建议新增(改进)措施',
       trigger: 'change'
     }
+  ],
+  description: [
+    {
+      required: true,
+      message: '请输入修改说明',
+      trigger: 'change'
+    }
   ]
 }
 
