@@ -70,23 +70,6 @@
               <el-input v-model="editForm.description" placeholder="请输入修改说明" />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="24" prop="name">
-            <el-form-item label="机构" prop="organizationId">
-              <el-select
-                disabled
-                v-model="editForm.organizationId"
-                placeholder="请选择机构"
-                style="width: 60%"
-              >
-                <el-option
-                  v-for="item in departmentList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col> -->
         </el-row>
       </el-form>
       <template #footer>
@@ -101,8 +84,13 @@
 
 <script>
 import { resetRules } from './config/branchContent.config'
-import { addDangerDraft } from '../../../../service/main/content/content'
+import {
+  addDangerDraft,
+  editBranchDanger,
+  addBranchDanger
+} from '../../../../service/main/content/content'
 import { getDepartmentList } from '../../../../service/main/department/department'
+import localCache from '../../../../utils/cache'
 import { ElMessage } from 'element-plus'
 export default {
   data() {
@@ -132,10 +120,12 @@ export default {
         { name: '蓝', value: 1 },
         { name: '黄', value: 2 },
         { name: '橙', value: 3 }
-      ]
+      ],
+      rights: []
     }
   },
   created() {
+    this.rights = localCache.cacheGet('userRights')
     this.getDepartmentList()
   },
   methods: {
@@ -154,8 +144,26 @@ export default {
       this.$refs.editFormRef.validate(async (valid) => {
         if (valid) {
           let res = null
-          // 新增草稿
-          res = await addDangerDraft(this.editForm)
+          if (this.editForm.id) {
+            // 有id
+            if (this.rights.includes('DangerSource.ManageOrganization')) {
+              // 有权限
+              res = await editBranchDanger(this.editForm)
+            } else {
+              // 无权限
+              res = await addDangerDraft(this.editForm)
+            }
+          } else {
+            // 没有id
+            if (this.rights.includes('DangerSource.ManageOrganization')) {
+              console.log('有权限')
+              // 有权限
+              res = await addBranchDanger(this.editForm)
+            } else {
+              // 无权限
+              res = await addDangerDraft(this.editForm)
+            }
+          }
           if (res.success) {
             ElMessage({
               message: '操作成功',

@@ -73,6 +73,10 @@ export default {
   //   overflow: auto;
   // }
 
+  :deep(.el-tree-node.is-current) {
+    color: #409eff;
+  }
+
   .search {
     margin-bottom: 10px;
     text-align: left;

@@ -57,7 +57,7 @@
 
 <script>
 import Edit from './edit.vue'
-import FileEdit from './file-edit.vue'
+import FileEdit from './fileEdit.vue'
 import { emitter1 } from '../../../../utils/eventbus'
 import { getGlobalDangerList } from '../../../../service/main/content/content'
 export default {

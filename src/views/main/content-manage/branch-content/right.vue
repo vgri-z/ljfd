@@ -22,14 +22,24 @@
         <el-table-column label="操作">
           <template #default="scope">
             <el-button
-              v-if="rights.includes('DangerSource.Update') || rights.includes('Superuser')"
+              v-if="
+                rights.includes('DangerSource.Create') ||
+                rights.includes('DangerSource.Update') ||
+                rights.includes('DangerSourceDraft.Update') ||
+                rights.includes('Superuser')
+              "
               type="text"
               size="small"
               @click="edit(scope.row)"
               >编辑</el-button
             >
             <el-button
-              v-if="rights.includes('DangerSource.Update') || rights.includes('Superuser')"
+              v-if="
+                rights.includes('DangerSource.Create') ||
+                rights.includes('DangerSource.Update') ||
+                rights.includes('DangerSourceDraft.Update') ||
+                rights.includes('Superuser')
+              "
               type="text"
               size="small"
               @click="fileEdit(scope.row)"
@@ -43,17 +53,18 @@
     <!-- 编辑 -->
     <edit ref="editRef" @updateGlobalDanger="updateGlobalDanger" />
     <!-- 文件管理 -->
-    <!-- <file-edit ref="fileEditRef" @updateGlobalDanger="updateGlobalDanger" /> -->
+    <file-edit ref="fileEditRef" @updateGlobalDanger="updateGlobalDanger" />
   </div>
 </template>
 
 <script>
 import Edit from './edit.vue'
+import FileEdit from './fileEdit.vue'
 import { emitter1 } from '../../../../utils/eventbus'
 import { getBranchDangerList } from '../../../../service/main/content/content'
 import { ElMessage } from 'element-plus/lib/components'
 export default {
-  components: { Edit },
+  components: { Edit, FileEdit },
   data() {
     return {
       dangerList: null,
@@ -71,6 +82,10 @@ export default {
     rights: {
       type: Array,
       default: () => []
+    },
+    OrganizationId: {
+      type: String,
+      default: ''
     }
   },
   created() {
@@ -80,9 +95,15 @@ export default {
       this.searchOptions.DangerZoneId = node.id
       this.getBranchDangerList()
     })
+    // 监听工厂的修改，请求列表
+    emitter1.on('updateBranchDangerList', (id) => {
+      this.searchOptions.OrganizationId = id
+      this.getBranchDangerList()
+    })
   },
   methods: {
     async getBranchDangerList() {
+      // 当前用户无工厂
       if (!this.searchOptions.OrganizationId) {
         ElMessage({
           message: '当前用户不属于任何工厂',
@@ -119,15 +140,7 @@ export default {
     },
     // 附件管理
     fileEdit(data) {
-      if (data.id) {
-        // 有id 可上传附件
-        this.$refs.fileEditRef.show(data)
-      } else {
-        ElMessage({
-          message: '分厂无法修改集团内容，请先编辑危险源',
-          type: 'warning'
-        })
-      }
+      this.$refs.fileEditRef.show(data)
     },
     updateGlobalDanger() {
       this.getBranchDangerList()

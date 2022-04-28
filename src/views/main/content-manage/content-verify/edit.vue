@@ -8,7 +8,7 @@
       :close-on-click-modal="false"
       @closed="cancel"
     >
-      <el-form ref="editFormRef" :model="editForm" label-width="100px">
+      <el-form ref="editFormRef" :model="editForm" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="文本修改内容">
@@ -17,13 +17,23 @@
                   <div class="before">
                     <span>
                       修改前的{{ compareDanger[item].nameText }}：
-                      <el-input readonly v-model="compareDanger[item].globalValue" />
+                      <el-input
+                        type="textarea"
+                        autosize
+                        readonly
+                        v-model="compareDanger[item].globalValue"
+                      />
                     </span>
                   </div>
                   <div class="after">
                     <span>
                       修改后的{{ compareDanger[item].nameText }}：
-                      <el-input readonly v-model="compareDanger[item].draftValue" />
+                      <el-input
+                        type="textarea"
+                        autosize
+                        readonly
+                        v-model="compareDanger[item].draftValue"
+                      />
                     </span>
                   </div>
                 </div>
@@ -52,9 +62,9 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="!isApprove">
-            <el-form-item label="驳回原因">
-              <el-input v-model="rejectReason" />
+          <el-col :span="24">
+            <el-form-item label="驳回原因" prop="comment">
+              <el-input v-model="editForm.comment" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -70,23 +80,41 @@
 </template>
 
 <script>
-import { getGlobalDangerDetail } from '../../../../service/main/content/content'
+import { ElMessage } from 'element-plus/lib/components'
+import {
+  getGlobalDangerDetail,
+  approveDraft,
+  rejectDraft
+} from '../../../../service/main/content/content'
 import useNameValue from './hooks/useNameValue.js'
 export default {
   data() {
     return {
       isEditShow: false,
-      editForm: {},
+      editForm: {
+        dangerSouceDraftId: '',
+        comment: ''
+      },
       draftData: {},
       isApprove: true,
       rejectReason: '', // 驳回原因
-      compareDanger: {}
+      compareDanger: {},
+      rules: {
+        comment: {
+          required: true,
+          message: '请输入审核说明',
+          trigger: 'blur'
+        }
+      }
     }
   },
+  emits: ['updateDraft'],
   methods: {
     show(data) {
       // console.log(data)
       this.draftData = data
+      this.editForm.dangerSouceDraftId = this.draftData.id
+      console.log(this.draftData, this.editForm)
       this.compareDangerSource(this.draftData.globalDangerSourceId)
       this.isEditShow = true
     },
@@ -112,7 +140,6 @@ export default {
         const name = useNameValue(key)
         this.compareDanger[key]['nameText'] = name
       })
-      console.log(this.compareDanger)
     },
     getCompareObj(originObj) {
       let targetObj = {}
@@ -140,10 +167,28 @@ export default {
       }
       return targetObj
     },
-    save() {
-      this.isEditShow = false
+    async save() {
+      this.$refs.editFormRef.validate(async (valid) => {
+        if (valid) {
+          let res
+          if (this.isApprove) {
+            res = await approveDraft(this.editForm)
+          } else {
+            res = await rejectDraft(this.editForm)
+          }
+          if (res.code === 0) {
+            ElMessage({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.isEditShow = false
+            this.$emit('updateDraft')
+          }
+        }
+      })
     },
     cancel() {
+      this.compareDanger = {}
       this.isEditShow = false
     }
   }
@@ -159,7 +204,7 @@ export default {
       margin-bottom: 5px;
     }
   }
-  :deep(.el-input) {
+  :deep(.el-textarea) {
     width: auto;
   }
 }
