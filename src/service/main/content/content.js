@@ -102,3 +102,35 @@ export function editBranchDanger(data) {
     data
   })
 }
+
+// 创建危险源草稿
+export function addDangerDraft(data) {
+  return vgriRequest.post({
+    url: '/danger-source/draft',
+    data
+  })
+}
+
+// 危险源草稿审核通过
+export function approveDraft(data) {
+  return vgriRequest.post({
+    url: '/danger-source/draft/approve',
+    data
+  })
+}
+
+// 危险源草稿审核拒绝
+export function rejectDraft(data) {
+  return vgriRequest.post({
+    url: '/danger-source/draft/reject',
+    data
+  })
+}
+
+// 获取危险源草稿列表
+export function getDraftList(params) {
+  return vgriRequest.get({
+    url: '/danger-source/draft/paged-list',
+    params
+  })
+}

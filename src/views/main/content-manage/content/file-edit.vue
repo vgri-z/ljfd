@@ -93,6 +93,7 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { fileUpload } from '../../../../service/main/file/file'
+// eslint-disable-next-line no-unused-vars
 import { editGlobalDanger } from '../../../../service/main/content/content'
 export default {
   data() {
@@ -132,6 +133,7 @@ export default {
       this.imgsList = this.dangerData.imagesFiles
       this.caseList = this.dangerData.caseFiles
       this.videoList = this.dangerData.videos
+      this.files = this.dangerData.files
       console.log(this.dangerData)
       this.isFileShow = true
     },
@@ -220,8 +222,9 @@ export default {
     // 保存时，调用编辑危险源的接口，将文件保存进对应的危险源
     async save() {
       // 拿到上传的文件，一个个的push到files数组里面，保存在dabgerData里的files里面，点击确定时
-      // 调用update接口，保存文件，然后属性列表页面
-      this.dangerData.files.push(...this.files)
+      // 调用update接口，保存文件，然后刷新列表页面
+      this.dangerData.files = this.files
+      console.log(this.dangerData)
       const res = await editGlobalDanger(this.dangerData)
       if (res.code === 0) {
         ElMessage({
@@ -234,16 +237,15 @@ export default {
     },
     // 图片预览
     handlePictureCardPreview(file) {
-      console.log(file)
       this.dialogVisible = true
       this.dialogImageUrl = file.url
     },
     // 文件移除
     handleRemove(file) {
       console.log(file)
-      const index = this.dangerData.files.findIndex((item) => item.uid === file.uid)
-      this.dangerData.files.splice(index, 1)
-      console.log(this.dangerData.files)
+      const index = this.files.findIndex((item) => item.uid === file.uid)
+      this.files.splice(index, 1)
+      console.log(this.files)
     },
     cancel() {
       this.isFileShow = false
