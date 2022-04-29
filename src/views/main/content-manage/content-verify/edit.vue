@@ -41,13 +41,47 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="新增图片"> </el-form-item>
+            <el-form-item label="新增图片">
+              <div class="imgs">
+                <el-upload
+                  action=""
+                  class="group-img"
+                  accept="image/*"
+                  ref="imgsUploadRef"
+                  list-type="picture-card"
+                  :before-remove="handleRemove"
+                  :file-list="imgList"
+                >
+                  <el-icon><Plus /></el-icon>
+                </el-upload>
+              </div>
+            </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="新增案例"> </el-form-item>
+            <el-form-item label="新增案例">
+              <div class="files">
+                <el-upload
+                  action=""
+                  ref="caseUploadRef"
+                  :before-remove="handleRemove"
+                  :file-list="fileList"
+                >
+                </el-upload>
+              </div>
+            </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="新增视频"> </el-form-item>
+            <el-form-item label="新增视频">
+              <div class="files">
+                <el-upload
+                  action=""
+                  ref="caseUploadRef"
+                  :before-remove="handleRemove"
+                  :file-list="videoList"
+                >
+                </el-upload>
+              </div>
+            </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="修改原因">
@@ -84,7 +118,8 @@ import { ElMessage } from 'element-plus/lib/components'
 import {
   getGlobalDangerDetail,
   approveDraft,
-  rejectDraft
+  rejectDraft,
+  getDraftDetail
 } from '../../../../service/main/content/content'
 import useNameValue from './hooks/useNameValue.js'
 export default {
@@ -99,6 +134,9 @@ export default {
       isApprove: true,
       rejectReason: '', // 驳回原因
       compareDanger: {},
+      imgList: [], // 新增图片列表
+      fileList: [], // 新增文件列表
+      videoList: [], // 新增视频列表
       rules: {
         comment: {
           required: true,
@@ -110,9 +148,21 @@ export default {
   },
   emits: ['updateDraft'],
   methods: {
-    show(data) {
+    async show(data) {
       // console.log(data)
-      this.draftData = data
+      const res = await getDraftDetail(data.id)
+      this.draftData = res.data
+      const baseUrl = 'http://114.55.1.241:8090/'
+      this.draftData.files.forEach((file) => {
+        file.url = baseUrl + file.uri
+        if (file.mime.indexOf('video/') !== -1) {
+          this.videoList.push(file)
+        } else if (file.mime.indexOf('image/') !== -1) {
+          this.imgList.push(file)
+        } else {
+          this.fileList.push(file)
+        }
+      })
       this.editForm.dangerSouceDraftId = this.draftData.id
       console.log(this.draftData, this.editForm)
       this.compareDangerSource(this.draftData.globalDangerSourceId)
@@ -187,8 +237,14 @@ export default {
         }
       })
     },
+    handleRemove() {
+      return false
+    },
     cancel() {
       this.compareDanger = {}
+      this.imgList = []
+      this.videoList = []
+      this.fileList = []
       this.isEditShow = false
     }
   }
@@ -207,5 +263,21 @@ export default {
   :deep(.el-textarea) {
     width: auto;
   }
+
+  .imgs {
+    :deep(.el-upload-list__item) {
+      background: red;
+      width: 100px;
+      height: 100px;
+    }
+
+    :deep(.el-upload.el-upload--picture-card) {
+      display: none;
+    }
+  }
+}
+
+.files {
+  width: 100%;
 }
 </style>

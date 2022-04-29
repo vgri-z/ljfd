@@ -58,13 +58,13 @@
         <el-table-column label="修改时间" prop="createTime"></el-table-column>
         <el-table-column label="审核状态" prop="status">
           <template #default="scope">
-            <el-button v-if="scope.row.status === 1" type="primary">
+            <el-button v-if="scope.row.status === 1" plain type="primary">
               {{ scope.row.statusText }}
             </el-button>
-            <el-button v-if="scope.row.status === 2" type="success">
+            <el-button v-if="scope.row.status === 2" plain type="success">
               {{ scope.row.statusText }}
             </el-button>
-            <el-button v-if="scope.row.status === 3" type="danger">
+            <el-button v-if="scope.row.status === 3" plain type="danger">
               {{ scope.row.statusText }}
             </el-button>
           </template>

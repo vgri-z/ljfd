@@ -134,3 +134,10 @@ export function getDraftList(params) {
     params
   })
 }
+
+// 获取危险源草稿详情
+export function getDraftDetail(id) {
+  return vgriRequest.get({
+    url: '/danger-source/draft/' + id
+  })
+}

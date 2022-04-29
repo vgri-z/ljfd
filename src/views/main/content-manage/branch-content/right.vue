@@ -2,7 +2,11 @@
   <div class="right">
     <div class="danger-info">
       <el-table :data="dangerList" border style="width: 100%">
-        <el-table-column prop="sort" label="序号"></el-table-column>
+        <el-table-column prop="sort" label="序号">
+          <template #default="scope">
+            <span :style="{ fontWeight: scope.row.id ? '600' : '' }">{{ scope.row.sort }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="危险源或潜在事件"></el-table-column>
         <el-table-column label="图片">
           <template #default="scope">

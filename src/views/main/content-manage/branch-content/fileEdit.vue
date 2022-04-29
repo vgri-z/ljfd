@@ -9,7 +9,7 @@
       @closed="cancel"
     >
       <!-- 集团文件展示 -->
-      <div class="item group-imgs">
+      <div v-if="globalImgs.length" class="item group-imgs">
         <div class="title">集团图片信息展示</div>
         <el-upload
           action=""
@@ -27,7 +27,7 @@
           <el-icon><Plus /></el-icon>
         </el-upload>
       </div>
-      <div class="item group-files">
+      <div v-if="globalFiles.length" class="item group-files">
         <div class="title">集团文件信息展示</div>
         <el-upload
           class="upload"
@@ -116,6 +116,15 @@
           </template>
         </el-upload>
       </div>
+      <el-form ref="editFormRef" :model="editForm" :rules="rules" label-width="60px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="描述" prop="description">
+              <el-input v-model="editForm.description" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button type="primary" @click="save">确认</el-button>
@@ -148,7 +157,17 @@ export default {
       globalFiles: [],
       dialogVisible: false,
       dialogImageUrl: '',
-      rights: []
+      rights: [],
+      editForm: {
+        description: ''
+      },
+      rules: {
+        description: {
+          required: true,
+          message: '请填写描述',
+          trigger: 'blur'
+        }
+      }
     }
   },
   created() {
@@ -156,8 +175,9 @@ export default {
   },
   methods: {
     show(data) {
-      console.log(data)
+      // console.log(data)
       this.dangerData = data
+      this.dangerData.dangerSourceId = this.dangerData.id
       // 图片/案例/视频回显
       const baseUrl = 'http://114.55.1.241:8090/'
       this.dangerData.imagesFiles.forEach((item) => {
@@ -181,7 +201,7 @@ export default {
       this.caseList = this.dangerData.caseFiles
       this.videoList = this.dangerData.videos
       this.files = this.dangerData.files
-      console.log(this.dangerData)
+      // console.log(this.dangerData)
       this.isFileShow = true
     },
     // 文件上传之前回调(通用)
@@ -271,24 +291,29 @@ export default {
       // 拿到上传的文件，一个个的push到files数组里面，保存在dabgerData里的files里面，点击确定时
       // 调用update接口，保存文件，然后刷新列表页面
       this.dangerData.files = this.files
+      this.dangerData.description = this.editForm.description
       console.log(this.dangerData)
       let res
       if (this.dangerData.id) {
         // 有id
         if (this.rights.includes('DangerSource.ManageOrganization')) {
+          console.log('有id 有权限')
           // 有权限
           res = await editBranchDanger(this.dangerData)
         } else {
           // 无权限
+          console.log('有id 无权限')
           res = await addDangerDraft(this.dangerData)
         }
       } else {
         // 没有id
         if (this.rights.includes('DangerSource.ManageOrganization')) {
           // 有权限
+          console.log('无id 有权限')
           res = await addBranchDanger(this.dangerData)
         } else {
           // 无权限
+          console.log('无id 无权限')
           res = await addDangerDraft(this.dangerData)
         }
       }
@@ -317,6 +342,8 @@ export default {
       return false
     },
     cancel() {
+      this.globalImgs = []
+      this.globalFiles = []
       this.isFileShow = false
     }
   }

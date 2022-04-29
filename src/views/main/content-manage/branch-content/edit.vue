@@ -134,9 +134,8 @@ export default {
       this.departmentList = res.data
     },
     show(data) {
-      console.log(data, 'data')
       this.editForm = Object.assign({}, this.editForm, data)
-      console.log(this.editForm, 'editForm')
+      this.editForm.dangerSourceId = this.editForm.id
       this.isEditShow = true
     },
     save() {

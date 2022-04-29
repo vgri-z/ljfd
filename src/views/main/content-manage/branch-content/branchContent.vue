@@ -73,7 +73,7 @@ export default {
     },
     async getContentTreeList() {
       const res = await getContentTreeList()
-      console.log(res)
+      // console.log(res)
       this.treeList = res.data
     }
   }
