@@ -127,6 +127,7 @@ export default {
       departmentList: [],
       draftList: [],
       rights: [],
+      flag: true,
       approveStatus: [
         { name: '待审核', value: 1 },
         { name: '已审核', value: 2 }
@@ -136,15 +137,14 @@ export default {
   created() {
     this.rights = localCache.cacheGet('userRights')
     this.getDepartmentList()
-    this.getDraftList()
   },
   methods: {
     async search() {
-      if (this.status === 1) {
+      if (this.status === 1 && this.flag) {
         // 未审核
         this.searchOption.Status = 1
         this.getDraftList()
-      } else if (this.status === 2) {
+      } else if (this.status === 2 && this.flag) {
         //已审核
         this.draftList = []
         this.getHasVerify(2)
@@ -179,19 +179,23 @@ export default {
       this.getDraftList()
     },
     async getDraftList() {
-      const res = await getDraftList(this.searchOption)
-      this.draftList = res.data.list?.map((item, index) => {
-        item.sort = index + 1
-        item.createTime = moment(item.creationTime).format('YYYY-MM-DD HH:mm:ss')
-        item.statusText = useApproveStatus(item.status)
-        item.changeContent = []
-        item.changedSections.forEach((o) => {
-          const str = useSectionType(o.sectionType)
-          item.changeContent.push(str)
+      if (this.flag) {
+        const res = await getDraftList(this.searchOption)
+        this.draftList = res.data.list?.map((item, index) => {
+          item.sort = index + 1
+          item.createTime = moment(item.creationTime).format('YYYY-MM-DD HH:mm:ss')
+          item.statusText = useApproveStatus(item.status)
+          item.changeContent = []
+          item.changedSections.forEach((o) => {
+            const str = useSectionType(o.sectionType)
+            item.changeContent.push(str)
+          })
+          return item
         })
-        return item
-      })
-      this.total = res.data.total
+        this.total = res.data.total
+      } else {
+        this.draftList = []
+      }
     },
     // 获取机构
     async getDepartmentList() {
@@ -199,24 +203,30 @@ export default {
       this.departmentList = res.data
       const userFactory = localCache.cacheGet('currentUserFactory')
       // 机构限制
-      if (
-        this.rights.includes('DangerSourceDraft.ManageOrganization') &&
-        !this.rights.includes('GlobalDangerSource.Manage')
-      ) {
+      // 有DangerSourceDraft.ManageOrganization权限，无工厂，工厂select没有默认选择项，但是可下拉
+      // 有DangerSourceDraft.ManageOrganization权限，有工厂，工厂select只有当前用户的工厂
+      // 无DangerSourceDraft.ManageOrganization权限，无工厂，列表空
+      if (this.rights.includes('DangerSourceDraft.ManageOrganization')) {
         if (userFactory) {
+          // 有工厂
           const item = this.departmentList.find((item) => item.id === userFactory.id)
           this.departmentList = [item]
           this.searchOption.organizationId = item.id
-          this.getDraftList()
+          this.flag = true
         } else {
-          ElMessage({
-            message: '当前用户没有工厂',
-            type: 'warning'
-          })
-          this.departmentList = []
-          this.draftList = []
+          // 无工厂
+          this.flag = true
         }
+      } else {
+        // 没有权限，列表为空
+        ElMessage({
+          message: '当前用户没有工厂',
+          type: 'warning'
+        })
+        this.departmentList = []
+        this.flag = false
       }
+      this.getDraftList()
     },
     // 审核
     approve(data) {
