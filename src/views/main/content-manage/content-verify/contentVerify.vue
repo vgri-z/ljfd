@@ -1,6 +1,7 @@
 <template>
   <div class="content-verify">
     <div class="search">
+      <!-- 有无管理权限 有 显示当前工厂 无 提示 有无工厂 有显示当前工厂 无 给提示 -->
       <el-form ref="searchFormRef" label-width="100px">
         <el-row>
           <el-col :span="6">
@@ -21,11 +22,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="审核状态">
-              <el-select
-                v-model="searchOption.Status"
-                placeholder="请选择审核态"
-                style="width: 100%"
-              >
+              <el-select v-model="status" placeholder="请选择审核态" style="width: 100%">
                 <el-option
                   v-for="item in approveStatus"
                   :key="item.name"
@@ -125,13 +122,14 @@ export default {
         Status: null,
         organizationId: ''
       },
+      status: '',
+      isPlain: false,
       departmentList: [],
       draftList: [],
       rights: [],
       approveStatus: [
         { name: '待审核', value: 1 },
-        { name: '已通过', value: 2 },
-        { name: '已拒绝', value: 99 }
+        { name: '已审核', value: 2 }
       ]
     }
   },
@@ -141,8 +139,34 @@ export default {
     this.getDraftList()
   },
   methods: {
-    search() {
-      this.getDraftList()
+    async search() {
+      if (this.status === 1) {
+        // 未审核
+        this.searchOption.Status = 1
+        this.getDraftList()
+      } else if (this.status === 2) {
+        //已审核
+        this.draftList = []
+        this.getHasVerify(2)
+        this.getHasVerify(99)
+      } else {
+        this.getDraftList()
+      }
+    },
+    async getHasVerify(status) {
+      this.searchOption.Status = status
+      const res = await getDraftList(this.searchOption)
+      res.data.list?.forEach((item, index) => {
+        item.sort = index + 1
+        item.createTime = moment(item.creationTime).format('YYYY-MM-DD HH:mm:ss')
+        item.statusText = useApproveStatus(item.status)
+        item.changeContent = []
+        item.changedSections.forEach((o) => {
+          const str = useSectionType(o.sectionType)
+          item.changeContent.push(str)
+        })
+      })
+      this.draftList.push(...res.data.list)
     },
     reset() {
       this.searchOption = {
@@ -169,7 +193,6 @@ export default {
       this.total = res.data.total
     },
     async getDepartmentList() {
-      console.log('======')
       const res = await getDepartmentList()
       this.departmentList = res.data
     },
@@ -199,6 +222,7 @@ export default {
   .search {
     background: #fff;
     padding: 10px 20px;
+    padding-bottom: 0;
     box-sizing: border-box;
     margin-bottom: 10px;
     border-radius: 4px;
