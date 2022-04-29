@@ -199,17 +199,23 @@ export default {
       this.departmentList = res.data
       const userFactory = localCache.cacheGet('currentUserFactory')
       // 机构限制
-      if (this.rights.includes('DangerSourceDraft.ManageOrganization')) {
+      if (
+        this.rights.includes('DangerSourceDraft.ManageOrganization') &&
+        !this.rights.includes('GlobalDangerSource.Manage')
+      ) {
         if (userFactory) {
-          this.departmentList = [this.departmentList.find((item) => item.id === userFactory.id)]
+          const item = this.departmentList.find((item) => item.id === userFactory.id)
+          this.departmentList = [item]
+          this.searchOption.organizationId = item.id
+          this.getDraftList()
         } else {
           ElMessage({
             message: '当前用户没有工厂',
             type: 'warning'
           })
+          this.departmentList = []
+          this.draftList = []
         }
-      } else {
-        //
       }
     },
     // 审核
