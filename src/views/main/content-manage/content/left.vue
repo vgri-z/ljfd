@@ -2,21 +2,21 @@
   <div class="left">
     <div class="search">
       <el-button
-        v-if="rights.includes('DangerZone.Create') || rights.includes('Superuser')"
+        v-if="rights.includes('GlobalDangerSource.Create') || rights.includes('Superuser')"
         size="small"
         type="primary"
         @click="add"
         >添加</el-button
       >
       <el-button
-        v-if="rights.includes('DangerZone.Update') || rights.includes('Superuser')"
+        v-if="rights.includes('GlobalDangerSource.Update') || rights.includes('Superuser')"
         size="small"
         type="primary"
         @click="edit"
         >修改</el-button
       >
       <el-button
-        v-if="rights.includes('DangerZone.Delete') || rights.includes('Superuser')"
+        v-if="rights.includes('GlobalDangerSource.Delete') || rights.includes('Superuser')"
         size="small"
         type="danger"
         @click="remove"

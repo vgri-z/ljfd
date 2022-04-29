@@ -1,7 +1,6 @@
 <template>
   <div class="content-verify">
     <div class="search">
-      <!-- 有无管理权限 有 显示当前工厂 无 提示 有无工厂 有显示当前工厂 无 给提示 -->
       <el-form ref="searchFormRef" label-width="100px">
         <el-row>
           <el-col :span="6">
@@ -110,6 +109,7 @@ import localCache from '../../../../utils/cache'
 import { getDraftList } from '../../../../service/main/content/content'
 import { getDepartmentList } from '../../../../service/main/department/department'
 import Edit from './edit.vue'
+import { ElMessage } from 'element-plus'
 export default {
   components: { Edit },
   data() {
@@ -153,6 +153,7 @@ export default {
         this.getDraftList()
       }
     },
+    // 获取已审核列表合集
     async getHasVerify(status) {
       this.searchOption.Status = status
       const res = await getDraftList(this.searchOption)
@@ -192,9 +193,24 @@ export default {
       })
       this.total = res.data.total
     },
+    // 获取机构
     async getDepartmentList() {
       const res = await getDepartmentList()
       this.departmentList = res.data
+      const userFactory = localCache.cacheGet('currentUserFactory')
+      // 机构限制
+      if (this.rights.includes('DangerSourceDraft.ManageOrganization')) {
+        if (userFactory) {
+          this.departmentList = [this.departmentList.find((item) => item.id === userFactory.id)]
+        } else {
+          ElMessage({
+            message: '当前用户没有工厂',
+            type: 'warning'
+          })
+        }
+      } else {
+        //
+      }
     },
     // 审核
     approve(data) {
