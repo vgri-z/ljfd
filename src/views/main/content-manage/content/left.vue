@@ -105,6 +105,14 @@ export default {
   //   overflow: auto;
   // }
 
+  :deep(.el-tree-node.is-current.is-focusable) {
+    > div {
+      > .el-tree-node__label {
+        color: #409eff;
+      }
+    }
+  }
+
   .search {
     margin-bottom: 10px;
     text-align: left;

@@ -38,6 +38,7 @@
           <el-col :span="5">
             <el-form-item>
               <el-button type="primary" @click="search">查询</el-button>
+              <el-button type="primary" @click="reset">重置</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -72,7 +73,10 @@
         <el-table-column label="操作">
           <template v-slot="scope">
             <el-button
-              v-if="rights.includes('DangerSourceDraft.Update') || rights.includes('Superuser')"
+              v-if="
+                (rights.includes('DangerSourceDraft.Update') || rights.includes('Superuser')) &&
+                scope.row.status === 1
+              "
               type="text"
               size="small"
               @click="approve(scope.row)"
@@ -127,7 +131,7 @@ export default {
       approveStatus: [
         { name: '待审核', value: 1 },
         { name: '已通过', value: 2 },
-        { name: '已拒绝', value: 3 }
+        { name: '已拒绝', value: 99 }
       ]
     }
   },
@@ -138,6 +142,15 @@ export default {
   },
   methods: {
     search() {
+      this.getDraftList()
+    },
+    reset() {
+      this.searchOption = {
+        Index: 1,
+        Size: 10,
+        Status: null,
+        organizationId: ''
+      }
       this.getDraftList()
     },
     async getDraftList() {
