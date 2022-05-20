@@ -71,7 +71,14 @@ export default {
       emitter1.emit('nodeClick', node)
     },
     add() {
-      this.$refs.editFactoryRef.show({ isAdd: true, node: this.selectedNode })
+      const nodeData = this.selectedNode
+      if (nodeData) {
+        const data = { isAdd: true, node: nodeData }
+        this.$refs.editFactoryRef.show(data)
+      } else {
+        const data = { isAdd: true, isAddTop: true, node: nodeData }
+        this.$refs.editFactoryRef.show(data)
+      }
     },
     edit() {
       this.$refs.editFactoryRef.show({ isAdd: false, node: this.selectedNode })
