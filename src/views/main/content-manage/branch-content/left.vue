@@ -3,7 +3,6 @@
     <el-tree
       :data="treeList"
       class="content-tree"
-      default-expand-all
       node-key="id"
       :props="defaultProps"
       :expand-on-click-node="false"
@@ -65,6 +64,7 @@ export default {
   border-right: 1px solid #e2e5e9;
   padding-right: 20px;
   box-sizing: border-box;
+  overflow: auto;
 
   // :deep(.el-tree) {
   //   height: calc(100% - 60px);

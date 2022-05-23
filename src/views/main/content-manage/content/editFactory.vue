@@ -113,7 +113,4 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.edit {
-}
-</style>
+<style lang="less" scoped></style>
