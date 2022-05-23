@@ -143,7 +143,7 @@ export default {
       resolve(res.data)
     },
     async getDepartmentList() {
-      const res = await getDepartmentList()
+      const res = await getDepartmentList({ HasFactory: true })
       this.departmentList = res.data
     },
     handleNodeClick(data) {
