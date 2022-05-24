@@ -52,6 +52,18 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="page">
+        <el-pagination
+          v-model:currentPage="currentPage"
+          :page-sizes="[10, 15, 20, 25]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        >
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 编辑 -->
@@ -78,6 +90,7 @@ export default {
         Index: 1,
         Size: 10
       },
+      pageSize: 10,
       total: 0,
       dangerNode: null
     }
@@ -148,6 +161,15 @@ export default {
     },
     updateGlobalDanger() {
       this.getBranchDangerList()
+    },
+    handleSizeChange(event) {
+      this.searchOptions.Size = event
+      this.pageSize = event
+      this.getBranchDangerList()
+    },
+    handleCurrentChange(event) {
+      this.searchOptions.Index = event
+      this.getBranchDangerList()
     }
   }
 }
@@ -168,6 +190,12 @@ export default {
   .el-col {
     margin-bottom: 30px;
     text-align: left;
+  }
+
+  .page {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
   }
 }
 </style>
