@@ -150,6 +150,7 @@ export default {
   border-right: 1px solid #e2e5e9;
   padding-right: 20px;
   box-sizing: border-box;
+  overflow: auto;
 
   // :deep(.el-tree) {
   //   height: calc(100% - 60px);
