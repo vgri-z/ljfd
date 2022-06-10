@@ -43,6 +43,7 @@
           :auto-upload="true"
           :file-list="caseList"
           :http-request="uploadCase"
+          :on-preview="filePreview"
         >
           <template #trigger>
             <el-button type="primary">选择案例文件</el-button>
@@ -68,6 +69,7 @@
           :auto-upload="true"
           :file-list="videoList"
           :http-request="uploadVideo"
+          :on-preview="filePreview"
         >
           <template #trigger>
             <el-button type="primary">选择视频文件</el-button>
@@ -134,7 +136,7 @@ export default {
       this.caseList = this.dangerData.caseFiles
       this.videoList = this.dangerData.videos
       this.files = this.dangerData.files
-      console.log(this.dangerData, '=====')
+      // console.log(this.dangerData, '=====')
       this.isFileShow = true
     },
     // 文件上传之前回调(通用)
@@ -218,6 +220,12 @@ export default {
     // 上传(视频)
     async uploadVideo(params) {
       this.fileUpload(params)
+    },
+    // 文件预览
+    filePreview(event) {
+      const baseUrl = 'http://114.55.1.241:8090/'
+      const url = baseUrl + this.files.find((item) => item.name === event.name).uri
+      window.open(url)
     },
     // 保存时，调用编辑危险源的接口，将文件保存进对应的危险源
     async save() {

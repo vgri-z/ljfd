@@ -156,7 +156,6 @@ export default {
       if (data.isAdd) {
         this.editForm.dangerZoneId = data.data.id // 危险区域id
       } else {
-        console.log(data, 'edit data')
         this.title = '编辑'
         this.editForm = Object.assign({}, this.editForm, data.data)
         this.editForm.globalDangerSourceId = this.editForm.organizations[0].globalDangerSourceId

@@ -126,7 +126,7 @@ export default {
           message: '当前用户不属于任何工厂',
           type: 'warning'
         })
-        return false
+        return
       }
       const res = await getBranchDangerList(this.searchOptions)
       if (res.data) {
