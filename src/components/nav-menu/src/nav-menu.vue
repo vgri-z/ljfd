@@ -2,7 +2,8 @@
   <div class="nav-menu">
     <!-- logo -->
     <div class="logo">
-      <img class="img" src="~@/assets/img/ship.png" alt="" />
+      <!-- <img class="img" src="~@/assets/img/ship.png" alt="" /> -->
+      <span style="display: inline-block; width: 20px; height: 20px"></span>
       <span v-if="isCollapse" class="title">垃圾发电管理系统</span>
     </div>
     <!-- 菜单 -->
