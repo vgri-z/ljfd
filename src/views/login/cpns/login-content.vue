@@ -50,7 +50,8 @@ export default {
     font-size: 24px;
     letter-spacing: 3px;
     text-align: center;
-    color: #0059b3;
+    // color: #0059b3;
+    color: #fff;
   }
 
   .login-form {

@@ -147,7 +147,7 @@ export default {
       this.departmentList = res.data
     },
     handleNodeClick(data) {
-      console.log(data)
+      // console.log(data)
       this.editForm.organizations = [data.id]
       this.editForm.organizationNames = data.name
       this.$refs.popeverRef.tooltipRef.onClose()
@@ -156,6 +156,7 @@ export default {
       if (data.isAdd) {
         this.editForm.dangerZoneId = data.data.id // 危险区域id
       } else {
+        console.log(data, 'edit data')
         this.title = '编辑'
         this.editForm = Object.assign({}, this.editForm, data.data)
         this.editForm.globalDangerSourceId = this.editForm.organizations[0].globalDangerSourceId
@@ -165,12 +166,11 @@ export default {
         })
         this.editForm.organizations = this.editForm.organizationIds
         // delete this.editForm.files
-        console.log(this.editForm)
+        // console.log(this.editForm)
       }
       this.isEditShow = true
     },
     save() {
-      console.log(this.editForm)
       this.$refs.editFormRef.validate(async (valid) => {
         if (valid) {
           let res = null

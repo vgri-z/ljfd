@@ -129,6 +129,7 @@ export default {
       this.$refs.editRef.show({ isAdd: true, data: this.dangerNode })
     },
     edit(data) {
+      console.log(data, '列表')
       this.$refs.editRef.show({ isAdd: false, data })
     },
     // 附件管理

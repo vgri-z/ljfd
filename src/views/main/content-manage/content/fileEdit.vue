@@ -93,8 +93,8 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { fileUpload } from '../../../../service/main/file/file'
-// eslint-disable-next-line no-unused-vars
 import { editGlobalDanger } from '../../../../service/main/content/content'
+import _ from 'lodash'
 export default {
   data() {
     return {
@@ -112,7 +112,7 @@ export default {
   methods: {
     show(data) {
       // 保存危险源信息
-      this.dangerData = data
+      this.dangerData = _.cloneDeep(data)
       this.dangerData.globalDangerSourceId = this.dangerData.organizations[0].globalDangerSourceId
       this.dangerData.organizationIds = []
       this.dangerData.organizations.forEach((item) => {
@@ -134,7 +134,7 @@ export default {
       this.caseList = this.dangerData.caseFiles
       this.videoList = this.dangerData.videos
       this.files = this.dangerData.files
-      console.log(this.dangerData)
+      console.log(this.dangerData, '=====')
       this.isFileShow = true
     },
     // 文件上传之前回调(通用)
@@ -242,10 +242,10 @@ export default {
     },
     // 文件移除
     handleRemove(file) {
-      console.log(file)
+      // console.log(file)
       const index = this.files.findIndex((item) => item.uid === file.uid)
       this.files.splice(index, 1)
-      console.log(this.files)
+      // console.log(this.files)
     },
     cancel() {
       this.isFileShow = false
