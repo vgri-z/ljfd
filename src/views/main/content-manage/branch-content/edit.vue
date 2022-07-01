@@ -4,7 +4,7 @@
       v-model="isEditShow"
       center
       :title="title"
-      width="40%"
+      width="50%"
       :close-on-click-modal="false"
       @closed="cancel"
     >
@@ -12,32 +12,56 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="危险源或潜在事件" prop="name">
-              <el-input v-model="editForm.name" placeholder="请输入危险源或潜在事件" />
+              <el-input
+                type="textarea"
+                v-model="editForm.name"
+                placeholder="请输入危险源或潜在事件"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="可能发生的事故类型及后果" prop="accident">
-              <el-input v-model="editForm.accident" placeholder="请输入可能发生的事故类型及后果" />
+              <el-input
+                type="textarea"
+                v-model="editForm.accident"
+                placeholder="请输入可能发生的事故类型及后果"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="工程控制措施" prop="emergencySolution">
-              <el-input v-model="editForm.emergencySolution" placeholder="请输入工程控制措施" />
+              <el-input
+                type="textarea"
+                v-model="editForm.emergencySolution"
+                placeholder="请输入工程控制措施"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="管理措施" prop="engineeringSolution">
-              <el-input v-model="editForm.engineeringSolution" placeholder="请输入管理措施" />
+              <el-input
+                type="textarea"
+                v-model="editForm.engineeringSolution"
+                placeholder="请输入管理措施"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="培训教育措施" prop="managementSolution">
-              <el-input v-model="editForm.managementSolution" placeholder="请输入培训教育措施" />
+              <el-input
+                type="textarea"
+                v-model="editForm.managementSolution"
+                placeholder="请输入培训教育措施"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="个体防护" prop="protection">
-              <el-input v-model="editForm.protection" placeholder="请输入个体防护" />
+              <el-input
+                type="textarea"
+                v-model="editForm.protection"
+                placeholder="请输入个体防护"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -55,6 +79,7 @@
           <el-col :span="24">
             <el-form-item label="建议新增(改进)措施" prop="trainingSolution">
               <el-input
+                type="textarea"
                 v-model="editForm.trainingSolution"
                 placeholder="请输入建议新增(改进)措施"
               />
@@ -62,12 +87,20 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="应急措施" prop="suggestions">
-              <el-input v-model="editForm.suggestions" placeholder="请输入应急措施" />
+              <el-input
+                type="textarea"
+                v-model="editForm.suggestions"
+                placeholder="请输入应急措施"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="修改说明" prop="description">
-              <el-input v-model="editForm.description" placeholder="请输入修改说明" />
+              <el-input
+                type="textarea"
+                v-model="editForm.description"
+                placeholder="请输入修改说明"
+              />
             </el-form-item>
           </el-col>
         </el-row>

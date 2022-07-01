@@ -67,7 +67,7 @@ export default {
   methods: {
     handleNodeClick(node) {
       this.selectedNode = node
-      emitter1.emit('nodeClick', node)
+      emitter1.emit('contentNodeClick', node)
     },
     add() {
       const nodeData = this.selectedNode

@@ -24,15 +24,15 @@
       </el-form>
     </div>
     <div class="table">
-      <left :treeList="treeList" />
-      <right :rights="rights" />
+      <branch-left :treeList="treeList" />
+      <branch-right :rights="rights" />
     </div>
   </div>
 </template>
 
 <script>
-import Left from './left.vue'
-import Right from './right.vue'
+import BranchLeft from './branchLeft.vue'
+import BranchRight from './branchRight.vue'
 import { emitter1 } from '../../../../utils/eventbus'
 import localCache from '../../../../utils/cache'
 import { getContentTreeList } from '../../../../service/main/content/content'
@@ -40,7 +40,7 @@ import { getDepartmentList } from '../../../../service/main/department/departmen
 // import { hasRights } from '@/utils/pageRights'
 
 export default {
-  components: { Left, Right },
+  components: { BranchLeft, BranchRight },
   data() {
     return {
       treeList: [],

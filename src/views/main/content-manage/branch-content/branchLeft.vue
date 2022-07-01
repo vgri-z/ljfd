@@ -35,7 +35,7 @@ export default {
   methods: {
     handleNodeClick(node) {
       this.selectedNode = node
-      emitter1.emit('nodeClick', node)
+      emitter1.emit('branchNodeClick', node)
     },
     add() {
       this.$refs.editFactoryRef.show({ isAdd: true, node: this.selectedNode })

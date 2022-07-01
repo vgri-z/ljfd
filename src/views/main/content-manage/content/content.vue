@@ -1,20 +1,20 @@
 <template>
   <div class="content">
-    <left :treeList="treeList" :rights="rights" />
-    <right :rights="rights" />
+    <content-left :treeList="treeList" :rights="rights" />
+    <content-right :rights="rights" />
   </div>
 </template>
 
 <script>
-import Left from './left.vue'
-import Right from './right.vue'
+import ContentLeft from './contentLeft.vue'
+import ContentRight from './contentRight.vue'
 import { getContentTreeList } from '../../../../service/main/content/content'
 import { emitter1 } from '@/utils/eventbus'
 import localCache from '../../../../utils/cache'
 // import { hasRights } from '@/utils/pageRights'
 
 export default {
-  components: { Left, Right },
+  components: { ContentLeft, ContentRight },
   data() {
     return {
       treeList: [],
