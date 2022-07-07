@@ -144,6 +144,8 @@ import {
   addBranchDanger
 } from '../../../../service/main/content/content'
 import localCache from '../../../../utils/cache'
+// eslint-disable-next-line no-unused-vars
+import _ from 'lodash'
 export default {
   data() {
     return {
@@ -176,7 +178,7 @@ export default {
   methods: {
     show(data) {
       // console.log(data)
-      this.dangerData = data
+      this.dangerData = Object.assign(data)
       this.dangerData.dangerSourceId = this.dangerData.id
       // 图片/案例/视频回显
       const baseUrl = 'http://114.55.1.241:8090/'
@@ -201,7 +203,6 @@ export default {
       this.caseList = this.dangerData.caseFiles
       this.videoList = this.dangerData.videos
       this.files = this.dangerData.files
-      // console.log(this.dangerData)
       this.isFileShow = true
     },
     // 文件上传之前回调(通用)
@@ -323,6 +324,7 @@ export default {
           message: '操作成功',
           type: 'success'
         })
+        this.$emit('updateBranchList')
         this.isFileShow = false
       }
     },

@@ -67,9 +67,9 @@
     </div>
 
     <!-- 编辑 -->
-    <edit ref="editRef" @updateGlobalDanger="updateGlobalDanger" />
+    <edit ref="editRef" @updateBranchList="updateBranchList" />
     <!-- 文件管理 -->
-    <file-edit ref="fileEditRef" @updateGlobalDanger="updateGlobalDanger" />
+    <file-edit ref="fileEditRef" @updateBranchList="updateBranchList" />
   </div>
 </template>
 
@@ -150,7 +150,6 @@ export default {
         })
         this.dangerList = res.data.list
         this.total = res.data.total
-        // console.log(this.dangerList)
       }
     },
     edit(data) {
@@ -159,9 +158,10 @@ export default {
     },
     // 附件管理
     fileEdit(data) {
+      console.log(data)
       this.$refs.fileEditRef.show(data)
     },
-    updateGlobalDanger() {
+    updateBranchList() {
       this.getBranchDangerList()
     },
     handleSizeChange(event) {
