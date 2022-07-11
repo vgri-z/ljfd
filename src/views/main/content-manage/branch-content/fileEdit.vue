@@ -112,7 +112,7 @@
             >视频文件上传</el-button
           > -->
           <template #tip>
-            <div class="el-upload__tip">注：请上传mp4、wvm等格式文件</div>
+            <div class="el-upload__tip">注：请上传mp4、wmv等格式文件</div>
           </template>
         </el-upload>
       </div>
