@@ -67,9 +67,10 @@ const loginModule = {
       localCache.cacheSet('userInfo', userInfo)
 
       // 获取用户菜单
-      const userMenusRes = await getUserMenus('Main')
+      const userMenusRes = await getUserMenus('Main') // 危险源管理菜单
+      const userMenusExamRes = await getUserMenus('Exam') // 考试管理菜单
       // console.log(userMenusRes, 'userMenus')
-      const userMenus = userMenusRes.data.items
+      const userMenus = userMenusRes.data.items.concat(userMenusExamRes.data.items)
       commit('changeUserMenus', userMenus)
       localCache.cacheSet('userMenus', userMenus)
       if (userMenus.length) {

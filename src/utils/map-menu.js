@@ -1,5 +1,6 @@
 // let firstMenu = null
 export function mapMenusToRoutes(userMenus) {
+  debugger
   const routes = []
   // 1. 先默认加载所有routes
   const allRoutes = []
@@ -8,6 +9,7 @@ export function mapMenusToRoutes(userMenus) {
     const route = routerFiles(key).default
     allRoutes.push(route)
   })
+  console.log(allRoutes, 'allRoutes')
   // 2. 根据userMenus获取所需要添加的routes
   // 递归获取需要添加的路由
   const _recurseGetRoute = (menus) => {

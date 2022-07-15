@@ -52,7 +52,7 @@ router.beforeEach((to) => {
     }
   }
 
-  // console.log(router.getRoutes())
+  console.log(router.getRoutes())
 })
 
 export default router
