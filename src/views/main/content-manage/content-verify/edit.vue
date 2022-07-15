@@ -266,7 +266,7 @@ export default {
 
   .imgs {
     :deep(.el-upload-list__item) {
-      background: red;
+      // background: red;
       width: 100px;
       height: 100px;
     }

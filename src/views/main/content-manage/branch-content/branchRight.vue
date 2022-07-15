@@ -29,7 +29,6 @@
               v-if="
                 rights.includes('DangerSource.Create') ||
                 rights.includes('DangerSource.Update') ||
-                rights.includes('DangerSourceDraft.Update') ||
                 rights.includes('Superuser')
               "
               type="text"
@@ -41,7 +40,6 @@
               v-if="
                 rights.includes('DangerSource.Create') ||
                 rights.includes('DangerSource.Update') ||
-                rights.includes('DangerSourceDraft.Update') ||
                 rights.includes('Superuser')
               "
               type="text"

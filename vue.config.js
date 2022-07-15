@@ -4,6 +4,7 @@ const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 module.exports = {
   lintOnSave: false,
   publicPath: '/',
+  outputDir: 'dangerSource',
   devServer: {
     proxy: {
       '^/api': {
